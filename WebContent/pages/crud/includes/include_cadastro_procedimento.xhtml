@@ -1,0 +1,25 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid width="50%">
+
+		<p:outputLabel for="itCodigo" value="Código" />
+		<p:inputText id="itCodigo" value="#{mbeanModel.codigo}" required="false" requiredMessage="Descrição é Obrigatório" />
+
+		<p:outputLabel for="itDescricao" value="Descrição" />
+		<p:inputText id="itDescricao" value="#{mbeanModel.descricao}" required="true" requiredMessage="Descrição é Obrigatório" style="width: 50%" />
+
+		<p:outputLabel for="itOrdem" value="Ordem" />
+		<p:inputNumber id="itOrdem" value="#{mbeanModel.ordem}" decimalPlaces="0" style="width: 70%" />
+
+		<p:outputLabel for="itProcedimento" value="Procedimento" />
+		<p:selectOneMenu id="itProcedimento" value="#{mbeanModel.procedimentoModel.id}" style="width: 70%">
+			<f:selectItem itemValue="" itemLabel="Não selecionado" />
+			<f:selectItems value="#{mbean.comboProcedimentos}" />
+		</p:selectOneMenu>
+		
+		<p:outputLabel for="flagAtivo" value="Ativo?" />
+		<p:selectBooleanCheckbox id="flagAtivo" value="#{mbeanModel.flagAtivo}" />
+		
+	</h:panelGrid>
+
+</ui:composition>

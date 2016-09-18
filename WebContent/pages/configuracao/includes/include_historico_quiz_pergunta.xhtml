@@ -1,0 +1,16 @@
+<ui:composition template="/pages/includes/template_dialog_historico.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${quizPerguntaFaces}" />
+	<ui:param name="mbeanModel" value="${quizPerguntaFaces.crudModel}" />
+	<ui:param name="mbeanPerguntaModel" value="${quizPerguntaFaces.crudModel}" />
+
+	<ui:define name="dados_historico">
+
+		<ui:include src="include_cadastro_quiz_pergunta.xhtml">
+			<ui:param name="disabled" value="${true}" />
+			<ui:param name="mbeanPerguntaModel" value="#{linha}" />
+		</ui:include>
+
+	</ui:define>
+
+</ui:composition>

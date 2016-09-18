@@ -1,0 +1,36 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+		<h:panelGroup>
+			<ts:calendar rendered="#{arquetipo.arquetipoModel.data}" pattern="#{arquetipo.arquetipoModel.pattern}" value="#{arquetipo.dataEscolhida}" disabled="#{isDisabled}"/>
+			<p:calendar rendered="#{arquetipo.arquetipoModel.hora}" pattern="#{arquetipo.arquetipoModel.pattern}" size="5" timeOnly="true" value="#{arquetipo.dataEscolhida}" onkeydown="maskDate(this,event,'HH:mm')" disabled="#{isDisabled}" />
+			<p:inputText rendered="#{arquetipo.arquetipoModel.numerico}" maxlength="#{arquetipo.arquetipoModel.maxlenght}" value="#{arquetipo.inteiroEscolhido}" disabled="#{isDisabled}" styleClass="integer coluna995">
+				<f:convertNumber integerOnly="true" />
+				<f:attribute name="codigo" value="C#{arquetipo.arquetipoModel.id}C" />
+				<p:ajax process="@this" global="false" />
+			</p:inputText>
+			<p:inputText rendered="#{arquetipo.arquetipoModel.pontoFlutuante}" maxlength="#{arquetipo.arquetipoModel.maxlenght}" value="#{arquetipo.doubleEscolhido}" disabled="#{isDisabled}" styleClass="float coluna995">
+				<f:convertNumber type="number" pattern="#,###,###,###.##" />
+				<f:attribute name="codigo" value="C#{arquetipo.arquetipoModel.id}C" />
+				<p:ajax process="@this" global="false" />
+			</p:inputText>
+			<p:inputText rendered="#{arquetipo.arquetipoModel.inputTexto}" maxlength="#{arquetipo.arquetipoModel.maxlenght}" value="#{arquetipo.respostaEscolhida}" disabled="#{isDisabled}" styleClass="coluna97">
+				<f:attribute name="codigo" value="C#{arquetipo.arquetipoModel.id}C" />
+				<p:ajax process="@this" global="false" />
+			</p:inputText>
+			<p:inputMask placeHolder="" rendered="#{arquetipo.arquetipoModel.inputMask}" label="#{arquetipo.id}" title="#{arquetipo.id}" mask="#{arquetipo.arquetipoModel.pattern}" maxlength="#{arquetipo.arquetipoModel.maxlenght}" value="#{arquetipo.respostaEscolhida}" disabled="#{isDisabled}" styleClass="coluna995">
+				<f:attribute name="codigo" value="C#{arquetipo.arquetipoModel.id}C" />
+				<p:ajax process="@this" global="false" />
+			</p:inputMask>
+			<p:inputTextarea rendered="#{arquetipo.arquetipoModel.texto}" maxlength="#{arquetipo.arquetipoModel.maxlenght}" value="#{arquetipo.respostaEscolhida}" rows="#{arquetipo.arquetipoModel.rows}" autoResize="false" disabled="#{isDisabled}" style="width: 97%" />
+			<p:selectOneMenu value="#{arquetipo.respostaEscolhida}" rendered="#{arquetipo.arquetipoModel.combo}" disabled="#{isDisabled}" style="width:99.5%">
+				<f:selectItems var="respostaArquetipo" value="#{arquetipo.arquetipoModel.respostas}" itemLabel="#{respostaArquetipo.resposta}" itemValue="#{respostaArquetipo.resposta}" />
+			</p:selectOneMenu>
+			<h:selectOneRadio rendered="#{arquetipo.arquetipoModel.radio}" value="#{arquetipo.respostaEscolhida}" disabled="#{isDisabled}" styleClass="radioMargin">
+				<f:selectItems var="respostaArquetipo" value="#{arquetipo.arquetipoModel.respostas}" itemLabel="#{respostaArquetipo.resposta}" itemValue="#{respostaArquetipo.resposta}" />
+			</h:selectOneRadio>
+			<h:selectManyCheckbox rendered="#{arquetipo.arquetipoModel.multiplo}" value="#{arquetipo.respostasEscolhidas}" disabled="#{isDisabled}">
+				<f:selectItems var="respostaArquetipo" value="#{arquetipo.arquetipoModel.respostas}" itemLabel="#{respostaArquetipo.resposta}" itemValue="#{respostaArquetipo.resposta}" />
+			</h:selectManyCheckbox>
+		</h:panelGroup>
+
+</ui:composition>

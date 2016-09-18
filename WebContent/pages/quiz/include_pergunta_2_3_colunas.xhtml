@@ -1,0 +1,21 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid id="pgQuiz" columns="#{quiz.qtdColunas}" columnClasses="#{quiz.cssColunas}" styleClass="#{quiz.cssDiv}" style="padding: #{quiz.quizPerguntaModel.radio ? '4px' : '5px'}; float: left">
+
+		<h:outputLabel value="#{quiz.apelido}" styleClass="#{quiz.quizPerguntaModel.vazia ? quiz.cssAjuste : ''}" style="vertical-align: top;" />
+		<h:outputText value="" rendered="#{quiz.qtdColunas == 2}" />
+
+		<h:panelGroup>
+			<ui:include src="include_quiz_campos.xhtml" />
+		</h:panelGroup>
+
+		<p:selectOneMenu value="#{quiz.unidade}" rendered="#{quiz.quizPerguntaModel.medidaModel.id != null}" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" style="margin-left: 10px;">
+			<f:selectItems var="unidade" value="#{quiz.quizPerguntaModel.medidaModel.unidadesMedidas}" itemLabel="#{unidade.unidadeMedidaModel.descricao}" itemValue="#{unidade.unidadeMedidaModel.descricao}" />
+			<p:ajax event="change" process="@this, #{idAtualizacao}" listener="#{mbeanQuiz.converterUnidade(quiz)}" update="#{idAtualizacao}" global="false"/>
+		</p:selectOneMenu>
+		<p:inputText rendered="#{quiz.flagOutros and (quiz.quizPerguntaModel.multiplo || quiz.quizPerguntaModel.radio || quiz.quizPerguntaModel.combo)}" disabled="#{!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)}" value="#{quiz.outros}" style="width: 98%" />
+		<h:outputText rendered="#{quiz.qtdColunas == 3 and empty quiz.quizPerguntaModel.arquetipos and (!quiz.flagOutros or (!quiz.quizPerguntaModel.multiplo and !quiz.quizPerguntaModel.radio and !quiz.quizPerguntaModel.combo))}" value="" />
+		
+	</h:panelGrid>
+
+</ui:composition>

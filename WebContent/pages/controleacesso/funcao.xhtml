@@ -1,0 +1,231 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:param name="mbean" value="${funcaoFaces}" />
+	<ui:param name="mbeanModel" value="${funcaoFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${funcaoFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="${true}" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_funcao.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+		</p:fieldset>
+
+		<p:panel header="Configurações de Acesso" toggleable="true" style="width: 100%; margin-left: 2px">
+
+			<h:panelGroup id="pgOrigens">
+
+				<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 35%">
+
+					<p:outputLabel for="lbOrigem" value="Origem" />
+					<h:outputText value="" />
+
+					<p:selectOneMenu id="lbOrigem" value="#{mbean.origemModel.id}" style="width: 98%">
+						<f:selectItem itemValue="" itemLabel="Selecione" />
+						<f:selectItems value="#{mbean.comboOrigens}" />
+					</p:selectOneMenu>
+					<p:commandButton id="btnAddOrigem" value="Adicionar" icon="ui-icon-plus" action="#{mbean.addOrigem}" update="pgOrigens" />
+
+				</h:panelGrid>
+
+				<ui:repeat var="origem" value="#{mbeanModel.funcaoOrigens}">
+
+					<p:panel header="#{origem.origemModel.descricao}" toggleable="true" style="width: 100%; margin-top: 10px">
+
+						<h:panelGrid id="pgOrigem" columns="2" columnClasses="coluna40, coluna60" style="width: 100%">
+
+							<h:panelGroup id="pgUsuarios">
+
+								<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 100%">
+
+									<p:outputLabel for="lbUsuario" value="Usuário" />
+									<h:outputText value="" />
+
+									<p:selectOneMenu id="lbUsuario" value="#{mbean.usuarioModel.id}" style="width: 98%">
+										<f:selectItem itemValue="" itemLabel="Selecione" />
+										<f:selectItems value="#{mbean.comboUsuarios}" />
+									</p:selectOneMenu>
+									<p:commandButton id="btnAddFuncao" value="Adicionar" icon="ui-icon-plus" action="#{mbean.addUsuario}" process="@this, pgOrigem" update="gridUsuarios">
+										<f:setPropertyActionListener target="#{funcaoFaces.funcaoOrigemSelecionada}" value="#{origem}" />
+									</p:commandButton>
+
+								</h:panelGrid>
+
+								<p:scrollPanel id="spUsuarios" mode="native" style="background: none; height: 200px; padding: 5px; overflow: auto;">
+
+									<p:dataTable id="gridUsuarios" emptyMessage="Nenhum registro encontrado" value="#{origem.usuarios}" var="linha" styleClass="dataTableNoBackground" style="margin-top: 10px">
+
+										<p:column headerText="Usuário" styleClass="coluna95">
+											<h:outputText value="#{linha.usuarioModel.nome}" />
+										</p:column>
+
+										<p:column headerText="Ativo" styleClass="coluna05" style="width: 30px;">
+											<div align="center">
+												<p:selectBooleanCheckbox value="#{linha.flagAtivo}" />
+											</div>
+										</p:column>
+
+									</p:dataTable>
+
+								</p:scrollPanel>
+
+							</h:panelGroup>
+
+							<h:panelGroup id="pgPermissaoesTela">
+
+								<h:panelGrid columns="2" columnClasses="coluna85, coluna15" style="width: 100%">
+
+									<p:outputLabel for="lbMenu" value="Menu" />
+									<h:outputText value="" />
+
+									<p:selectOneMenu id="lbMenu" value="#{mbean.menuModel.id}" style="width: 98%">
+										<f:selectItem itemValue="" itemLabel="Selecione" />
+										<f:selectItems value="#{mbean.comboMenus}" />
+									</p:selectOneMenu>
+
+									<p:commandButton id="btnAddMenu" value="Adicionar" icon="ui-icon-plus" action="#{mbean.addMenu}" process="@this, pgOrigem" update="gridPermissoesTela">
+										<f:setPropertyActionListener target="#{funcaoFaces.funcaoOrigemSelecionada}" value="#{origem}" />
+									</p:commandButton>
+
+								</h:panelGrid>
+
+								<p:scrollPanel id="spPermissoesTela" mode="native" style="background: none; height: 200px; padding: 5px; overflow: auto;">
+
+									<p:dataTable id="gridPermissoesTela" emptyMessage="Nenhum registro encontrado" value="#{origem.menus}" var="linha" styleClass="dataTableNoBackground" style="margin-top: 10px">
+
+										<p:column headerText="Menu" styleClass="coluna95" sortBy="#{linha.menuModel.descricao}">
+											<h:outputText value="#{linha.menuModel.descricao}" />
+										</p:column>
+
+										<p:column headerText="Ins" styleClass="coluna05" style="width: 20px;">
+											<p:selectBooleanCheckbox value="#{linha.flagInserir}" />
+										</p:column>
+
+										<p:column headerText="Alt" styleClass="coluna05" style="width: 20px;">
+											<p:selectBooleanCheckbox value="#{linha.flagAlterar}" />
+										</p:column>
+
+										<p:column headerText="Exc" styleClass="coluna05" style="width: 20px;">
+											<p:selectBooleanCheckbox value="#{linha.flagExcluir}" />
+										</p:column>
+
+										<p:column headerText="Imp" styleClass="coluna05" style="width: 20px;">
+											<p:selectBooleanCheckbox value="#{linha.flagImprimir}" />
+										</p:column>
+
+										<p:column headerText="Ata" styleClass="coluna05" style="width: 20px;">
+											<p:selectBooleanCheckbox value="#{linha.flagAtalho}" />
+										</p:column>
+
+										<p:column styleClass="coluna05" style="width: 20px;">
+											<div align="center">
+												<p:commandLink title="Clique para remover" action="#{mbean.delMenu}" update="@form">
+													<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+													<f:setPropertyActionListener target="#{funcaoFaces.menuFuncaoOrigemSelecionada}" value="#{linha}" />
+													<f:setPropertyActionListener target="#{funcaoFaces.funcaoOrigemSelecionada}" value="#{origem}" />
+												</p:commandLink>
+											</div>
+										</p:column>
+
+									</p:dataTable>
+
+								</p:scrollPanel>
+
+							</h:panelGroup>
+
+							<h:panelGroup id="pgPermissoesAcao">
+
+								<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 100%">
+
+									<p:outputLabel for="lbPermissao" value="Permissão" />
+									<h:outputText value="" />
+
+									<p:selectOneMenu id="lbPermissao" value="#{mbean.permissaoModel.id}" style="width: 98%">
+										<f:selectItem itemValue="" itemLabel="Selecione" />
+										<f:selectItems value="#{mbean.comboPermissoes}" />
+									</p:selectOneMenu>
+									<p:commandButton id="btnAddPermissao" value="Adicionar" icon="ui-icon-plus" action="#{mbean.addPermissao}" process="@this, pgOrigem" update="gridPermissoesAcao">
+										<f:setPropertyActionListener target="#{funcaoFaces.funcaoOrigemSelecionada}" value="#{origem}" />
+									</p:commandButton>
+
+								</h:panelGrid>
+
+								<p:scrollPanel id="spPermissoesAcao" mode="native" style="background: none; height: 200px; padding: 5px; overflow: auto;">
+
+									<p:dataTable id="gridPermissoesAcao" emptyMessage="Nenhum registro encontrado" value="#{origem.permissoes}" var="linha" styleClass="dataTableNoBackground" style="margin-top: 10px">
+
+										<p:column headerText="Permissão" styleClass="coluna95">
+											<h:outputText value="#{linha.permissaoModel.descricao}" />
+										</p:column>
+
+										<p:column styleClass="coluna05" style="width: 20px;">
+											<div align="center">
+												<p:commandLink title="Clique para remover" action="#{mbean.delPermissao}" update="@form">
+													<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+													<f:setPropertyActionListener target="#{funcaoFaces.permissaoFuncaoOrigemSelecionada}" value="#{linha}" />
+													<f:setPropertyActionListener target="#{funcaoFaces.funcaoOrigemSelecionada}" value="#{origem}" />
+												</p:commandLink>
+											</div>
+										</p:column>
+
+									</p:dataTable>
+
+								</p:scrollPanel>
+
+							</h:panelGroup>
+
+						</h:panelGrid>
+
+						<div align="right">
+							<p:commandButton value="Remover" icon="ui-icon-close" action="#{mbean.delOrigem}" update="@form">
+								<f:setPropertyActionListener target="#{funcaoFaces.funcaoOrigemSelecionada}" value="#{origem}" />
+							</p:commandButton>
+						</div>
+
+					</p:panel>
+
+				</ui:repeat>
+
+			</h:panelGroup>
+
+		</p:panel>
+
+	</ui:define>
+	
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_funcao.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid width="100%" columns="1" columnClasses="coluna50">
+
+			<h:outputLabel for="itDescricaoPesquisa" value="Descrição" />
+			<p:inputText id="itDescricaoPesquisa" value="#{mbeanPesquisaModel.descricao}" style="width: 50%" />
+
+			<h:outputText value="Ativo?" />
+			<p:selectBooleanCheckbox value="#{mbeanPesquisaModel.flagAtivo}" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Descrição" styleClass="coluna40">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+		<p:column headerText="Situação" styleClass="coluna20">
+			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,20 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid width="100%" columns="4" columnClasses="coluna40, coluna30, coluna10, coluna20">
+
+		<p:outputLabel for="itDescricao" value="Descrição" />
+		<h:outputLabel for="menuInicial" value="Menu Inicial" />
+		<h:outputLabel for="cbFlagAtivo" value="Ativo?" />
+		<h:outputLabel for="cbFlagPermissaoLogin" value="Acesso?" />
+
+		<p:inputText id="itDescricao" value="#{mbeanModel.descricao}" required="true" maxlength="150" styleClass="coluna95" />
+		<p:selectOneMenu id="menuInicial" value="#{mbeanModel.menuInicial.id}" style="width: 90%">
+			<f:selectItem itemValue="" itemLabel="Selecione" />
+			<f:selectItems value="#{funcaoFaces.comboMenus}" />
+		</p:selectOneMenu>
+		<p:selectBooleanCheckbox id="cbFlagAtivo" value="#{mbeanModel.flagAtivo}" />
+		<p:selectBooleanCheckbox id="cbFlagPermissaoLogin" value="#{mbeanModel.flagPermissaoLogin}" />
+
+	</h:panelGrid>
+
+</ui:composition>

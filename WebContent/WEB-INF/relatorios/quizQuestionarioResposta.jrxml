@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quizQuestionarioResposta" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6d5ea164-8738-4a68-894d-6ab1dfb63afb">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+QG.DESCRICAO GRUPO,
+COALESCE(NULLIF(Q.APELIDO, ''), NULLIF(QP.APELIDO, ''), QP.PERGUNTA) PERGUNTA,
+QQR.RESPOSTA || COALESCE(' '||nullif(QQR.UNIDADE, ''), '') || COALESCE(' ' || array_to_string(array(select ' ' || COALESCE(NULLIF(QP2.APELIDO, ''), qp2.pergunta) || ': ' || resposta from quiz_questionario_arquetipo_resposta qqar, quiz_pergunta_arquetipo qpa, quiz_pergunta qp2 WHERE qqar.quiz_pergunta_arquetipo_id = qpa.id and qpa.arquetipo_id = qp2.id and quiz_questionario_resposta_id = QQR.ID ORDER BY qqar.id), ',', '*'), '') || COALESCE(': '||nullif(QQR.OUTROS, ''), '') RESPOSTA
+
+FROM QUIZ_PERGUNTA QP, QUIZ_QUESTIONARIO_RESPOSTA QQR, QUIZ_QUESTIONARIO QQ, QUIZ_GRUPO QG, QUIZ Q
+WHERE QQR.QUIZ_ID = Q.ID
+  AND QQR.QUIZ_QUESTIONARIO_ID = QQ.ID
+  AND Q.QUIZ_PERGUNTA_ID = QP.ID
+  AND Q.QUIZ_GRUPO_ID = QG.ID
+  AND QQ.ID = $P{ID}
+ORDER BY QG.ORDEM, Q.ORDEM, QP.PERGUNTA]]>
+	</queryString>
+	<field name="grupo" class="java.lang.String"/>
+	<field name="pergunta" class="java.lang.String"/>
+	<field name="resposta" class="java.lang.String"/>
+	<group name="grp_grupo" keepTogether="true">
+		<groupExpression><![CDATA[$F{grupo}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField pattern="">
+					<reportElement uuid="95ba0e66-b7d8-4d68-9286-f3f9b89a4adf" mode="Opaque" x="0" y="0" width="555" height="14" backcolor="#F0F0F0"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["  " + $F{grupo}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="1d76078f-be5b-4aa1-aab7-ffc20f175c16" x="19" y="1" width="156" height="12"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pergunta}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f7f6393d-fabe-4bdc-a5c5-5e0e7962b4ed" x="175" y="1" width="380" height="12"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="false" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{resposta}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

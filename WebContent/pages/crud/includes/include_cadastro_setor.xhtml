@@ -1,0 +1,75 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid columns="2" columnClasses="coluna50_2, coluna50_2" styleClass="coluna100">
+
+		<h:panelGroup>
+
+			<h:panelGrid styleClass="coluna100">
+
+				<p:outputLabel for="descricao" value="Descrição" />
+				<p:inputText id="descricao" maxlength="100" value="#{mbeanModel.descricao}" required="true" disabled="#{disabled}" styleClass="coluna97" />
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" columnClasses="coluna50, coluna50" styleClass="coluna100">
+
+				<p:outputLabel for="centroResultado" value="Centro de Resultado" />
+				<h:outputText value="Setor Responsável" />
+
+				<p:selectOneMenu id="centroResultado" value="#{mbeanModel.centroResultadoModel.id}" disabled="#{disabled}" styleClass="coluna98">
+					<f:selectItem itemValue="" itemLabel="Selecione" />
+					<f:selectItems value="#{setorFaces.comboCentroResultado}" />
+				</p:selectOneMenu>
+				<p:selectOneMenu id="lbSetorPai" value="#{mbeanModel.setorModel.id}" disabled="#{disabled}" styleClass="coluna95">
+					<f:selectItem itemValue="" itemLabel="Selecione" />
+					<f:selectItems value="#{setorFaces.comboSetor}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid styleClass="coluna100">
+
+				<h:outputText value="Ativo?" />
+				<p:selectBooleanCheckbox value="#{mbeanModel.flagAtivo}" />
+
+			</h:panelGrid>
+
+		</h:panelGroup>
+
+		<p:panel header="Origens que contém o setor">
+
+			<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 100%; margin-left: -3px">
+
+				<h:outputText value="Origem" />
+				<h:outputText value="" />
+
+				<p:selectOneMenu value="#{setorFaces.origemModel.id}" styleClass="coluna98">
+					<f:selectItem itemValue="" itemLabel="Selecione" />
+					<f:selectItems value="#{setorFaces.comboOrigens}" />
+				</p:selectOneMenu>
+				<p:commandButton id="btnAddOrigem" action="#{setorFaces.addOrigem}" value="Adicionar" icon="ui-icon-plus" process="@form" update="@form" rendered="#{!disabled}" />
+
+			</h:panelGrid>
+
+			<p:dataTable id="gridOrigem" emptyMessage="Nenhuma origem adicionada" value="#{mbeanModel.origens}" var="origem" style="width: 100%">
+
+				<p:column headerText="Origem" styleClass="coluna85">
+					<h:outputText value="#{origem.origemModel.descricao}" />
+				</p:column>
+
+				<p:column headerText="Excluir" styleClass="coluna015" rendered="#{!disabled}">
+					<div align="center">
+						<p:commandLink id="clExcluir" action="#{setorFaces.delOrigem}" process="@form" update="@form" rendered="#{menuFaces.menuModel.flagAlterar}">
+							<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+							<f:setPropertyActionListener target="#{setorFaces.setorOrigemModel}" value="#{origem}" />
+						</p:commandLink>
+					</div>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+
+	</h:panelGrid>
+
+</ui:composition>

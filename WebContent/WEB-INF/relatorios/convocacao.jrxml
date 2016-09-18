@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="convocacao" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="36afe60c-7800-4e26-83cb-4aafe931a853">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="82"/>
+	<parameter name="ID" class="java.lang.Long"/>
+	<parameter name="DATA_CONVOCACAO" class="java.sql.Timestamp"/>
+	<queryString>
+		<![CDATA[SELECT CONVERTER(F.NOME, 'top10sysSistemas') NOME, CONVERTER(F.MATRICULA, 'top10sysSistemas') MATRICULA
+       , (SELECT C.DESCRICAO FROM CIDADE C WHERE C.ID = O.CIDADE_ID) CIDADE, O.CODIGO ORIGEM
+       , 'Em conformidade com a Portaria n.º xxxx-GC/14, que instituiu o Programa de Controle Médico - PCM na PMBA, fica convocado o Sr.(a) ' || CONVERTER(F.NOME, 'top10sysSistemas') || ' Matrícula: ' || CONVERTER(F.MATRICULA, 'top10sysSistemas') || ' a comparecer no(a) ' || O.CODIGO || ' às ' || COALESCE(TO_CHAR($P{DATA_CONVOCACAO}::timestamp with time zone, 'HH24:MI'), '___:___') || ' horas do dia ' || COALESCE(TO_CHAR($P{DATA_CONVOCACAO}::date, 'DD/MM/YYYY'), '___/___/___') || ', munido dos resultados dos exames solicitados (anexo) e cartão vacinal para realizar exame biométrico, aferição de dados vitais e preencher a Ficha Epidemiológica.' TEXTO
+  FROM ATENDIMENTO A, FUNCIONARIO F, ORIGEM O
+ WHERE A.FUNCIONARIO_ID = F.ID
+   AND O.ID = F.ORIGEM_ID
+   AND A.ID = $P{ID}]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<field name="matricula" class="java.lang.String"/>
+	<field name="cidade" class="java.lang.String"/>
+	<field name="origem" class="java.lang.String"/>
+	<field name="texto" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<summary>
+		<band height="802" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="34" width="555" height="14" uuid="61698525-c442-4f06-9639-42dd79baa580"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ANEXO B]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="85" width="555" height="1" uuid="c3720b93-e046-4864-be8d-ec25de84f444"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="86" width="555" height="14" uuid="2b137d77-e805-4091-83fe-4e732e409dc6"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[POLÍCIA MILITAR DA BAHIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="555" height="14" uuid="53f48b75-f477-4c39-8985-5473e69af594"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[DEPARTAMENTO DE SAÚDE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="160" width="555" height="14" uuid="0c31f60b-2478-47e0-a3b8-89cb4d22142f"/>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[CONVOCAÇÃO]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="188" width="555" height="69" uuid="87a7dbff-4daa-4e1b-859c-549c481a9b7e"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{texto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="455" width="555" height="14" uuid="0578cff5-9553-4a8b-884f-a0354ddb097d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Oficial Médico - CREMEB]]></text>
+			</staticText>
+			<line>
+				<reportElement x="117" y="454" width="320" height="1" uuid="91f2d778-03c8-4ee1-a32c-9a680c6c75d8"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="499" width="555" height="14" uuid="e275abe4-621e-4561-b97f-6b2ce80fb727"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ATENÇÃO!]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="545" width="555" height="47" uuid="15c80ba7-868c-4a08-bb27-12fcc6fb3ee0"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[* A impossibilidade do comparecimento por motivos justificáveis e inadiáveis, deverá ser comunicada à OPM e ao NCPM imediatamente após o recebimento dessa convocação, para a devida remarcação do exame periódico de saúde]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="600" width="555" height="18" uuid="17e771a5-1c4a-46bc-af14-ff51bffc5070"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[** Se o Sr(a) recentemente realizou algum exame complementar, favor levá-lo consigo.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="639" width="555" height="1" uuid="454aa428-a1b7-4472-bfe5-0be047a4a4db"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="670" width="555" height="18" uuid="c8c33562-0cbd-4c7a-90ff-f862c4fa596b"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[OBS: a convocação também poderá ocorrer mediante publicação de lista em BGO]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement x="55" y="355" width="182" height="14" uuid="6e8046ca-ce03-4130-820f-2038b77f1285"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cidade}]]></textFieldExpression>
+			</textField>
+			<textField pattern="&apos;, de&apos; dd &apos;de&apos; MMMMM &apos;de&apos; yyyy">
+				<reportElement x="237" y="355" width="318" height="14" uuid="023e6065-3bf2-4a06-b53b-a9f471dc83c4"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

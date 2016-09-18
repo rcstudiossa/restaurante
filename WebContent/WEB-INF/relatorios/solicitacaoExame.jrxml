@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="solicitacaoExame" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="be175c1d-da88-4f0e-b41c-ae44cafa02a5">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["F:\\Java\\Projetos\\sistemabasico\\WebContent\\WEB-INF\\relatorios\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT SE.ORIGEM_ID, CONVERTER(F.NOME, 'top10sysSistemas') NOME, P.DESCRICAO PROCEDIMENTO,
+       (SELECT C.CODIGO FROM CID C WHERE C.ID = SE.CID_ID) CID, SEI.SOLICITACAO_EXAME_ID
+  FROM SOLICITACAO_EXAME SE, SOLICITACAO_EXAME_ITEM SEI, PROCEDIMENTO P, FUNCIONARIO F
+ WHERE SEI.SOLICITACAO_EXAME_ID = SE.ID
+   AND SEI.PROCEDIMENTO_ID = P.ID
+   AND SE.FUNCIONARIO_ID = F.ID
+   AND SE.ID = $P{ID}
+ ORDER BY P.ORDEM]]>
+	</queryString>
+	<field name="origem_id" class="java.lang.Integer"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="procedimento" class="java.lang.String"/>
+	<field name="cid" class="java.lang.String"/>
+	<field name="solicitacao_exame_id" class="java.lang.Long"/>
+	<group name="grp_solicitacao_exame_Id">
+		<groupExpression><![CDATA[$F{solicitacao_exame_id}]]></groupExpression>
+		<groupHeader>
+			<band height="178">
+				<subreport>
+					<reportElement x="0" y="99" width="555" height="79" uuid="ae34c3ae-7578-43de-819d-ad4c27cdaaca"/>
+					<subreportParameter name="NOME">
+						<subreportParameterExpression><![CDATA[$F{nome}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "solicitacaoExameGroupHeaderInclude.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="50">
+				<subreport>
+					<reportElement x="0" y="27" width="555" height="23" uuid="0b3f6775-78db-4ecc-8c70-5d66ced08998"/>
+					<subreportParameter name="CID">
+						<subreportParameterExpression><![CDATA[$F{cid}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "solicitacaoExameGroupFooterInclude.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="59" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="59" uuid="618857aa-76b9-43cf-9542-c07a1f5e7e51"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ORIGEM_ID">
+					<subreportParameterExpression><![CDATA[$F{origem_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cabecalho.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="22" uuid="2fb7ba2a-22fc-4a7b-a384-05cb1dcaaf02"/>
+				<subreportParameter name="PROCEDIMENTO">
+					<subreportParameterExpression><![CDATA[$F{procedimento}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "solicitacaoExameDetailInclude.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="12">
+			<staticText>
+				<reportElement x="215" y="0" width="56" height="12" uuid="ab363253-97ea-42bc-ac0e-e0fb7a567351"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Impresso em: ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm &apos;GMT&apos; Z">
+				<reportElement x="276" y="0" width="77" height="12" uuid="969429e3-4572-46a6-91f0-6c1bb47d4da7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="0" width="80" height="12" uuid="fa0b3709-efa6-4fce-9f4d-631a23d0fbb2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER} + " de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="0" width="40" height="12" uuid="efda9206-1185-4991-b786-9b08b9d3efdb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

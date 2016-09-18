@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quizQuestionario" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="359d7c27-fdc4-4c00-8778-daac09ff1ef6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/Users/roquesouza/Desenvolvimento/projetos/java/HosFlow/WebContent/WEB-INF/relatorios/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FLAG_ESCONDER_CABECALHO" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_RETROATIVA_IMPRESSAO" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[select QQ.id, QQ.data_cadastro, QQ.atendimento_id,
+U.NOME,
+(select tq.descricao from tipo_quiz tq where tq.id = qq.tipo_quiz_id) descricao,
+qq.data_cadastro as data
+
+  from QUIZ_QUESTIONARIO QQ, usuario u where QQ.usuario_cadastro_id = u.id
+
+ and QQ.id = $P{ID} ]]>
+	</queryString>
+	<field name="id" class="java.lang.Long"/>
+	<field name="data_cadastro" class="java.sql.Timestamp"/>
+	<field name="atendimento_id" class="java.lang.Long"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="data" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="27">
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="24" uuid="4e5754f4-db30-4f8b-b244-a9ee2639d108">
+					<printWhenExpression><![CDATA[$P{FLAG_ESCONDER_CABECALHO} == false]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="titulo">
+					<subreportParameterExpression><![CDATA[$F{descricao}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ID">
+					<subreportParameterExpression><![CDATA[$F{atendimento_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cabecalhoFuncionario.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<detail>
+		<band height="32">
+			<subreport>
+				<reportElement x="0" y="15" width="555" height="17" isRemoveLineWhenBlank="true" uuid="7f3ad91e-42ba-496b-95f5-1b6c86b09731"/>
+				<subreportParameter name="ID">
+					<subreportParameterExpression><![CDATA[$P{ID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "quizQuestionarioResposta.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" mode="Opaque" x="0" y="0" width="555" height="15" backcolor="#CCCCCC" uuid="5f8d2a2b-b52d-4d73-9b14-91a66ec81b9f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="391" y="0" width="163" height="15" uuid="9c7ac65b-dab5-4b6e-b8cd-d2538da9c1a5"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="16">
+			<textField evaluationTime="Auto">
+				<reportElement x="505" y="0" width="49" height="16" uuid="b26942f6-356f-4a23-97c3-a472fa67e6a9"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="273" y="0" width="153" height="16" uuid="d29c3110-0cec-420a-b8a5-d1504f0cf18e"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="426" y="0" width="77" height="16" uuid="1c198213-c310-408d-bd4f-c0e072b7702a"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="217" y="0" width="56" height="16" uuid="1f3a1680-99ba-46d5-bc54-ab5ae3a30712"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Impresso em: ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42">
+			<line>
+				<reportElement x="317" y="29" width="237" height="1" uuid="5f88b8d5-7d2f-4945-ba34-9e19ee12df2b"/>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="317" y="30" width="237" height="10" isPrintWhenDetailOverflows="true" uuid="4fb5de59-191a-4386-a6b3-a8409e5aca62"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

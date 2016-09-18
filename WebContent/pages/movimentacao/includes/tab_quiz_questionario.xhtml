@@ -1,0 +1,78 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="#{quizQuestionarioFaces}" />
+	<ui:param name="mbeanModel" value="${quizQuestionarioFaces.quizQuestionarioModel}" />
+
+	<ui:decorate template="/pages/includes/decorate_atendimento.xhtml">
+
+		<ui:param name="titlePai" value="pgQuestionarioPai" />
+		<ui:param name="titleFilho1" value="spQuestionarioFilho1" />
+		<ui:param name="titleFilho2" value="spQuestionarioFilho2" />
+		<ui:param name="titleBtn" value="pnQuestionarioBtn" />
+
+		<ui:define name="botoesScrollSuperior">
+
+			<h:panelGrid id="pgBtnSuperiorQuiz" rendered="#{tab.flagCriar}" columns="2" columnClasses="coluna50, coluna50" styleClass="botoesCriacao" style="width: 100%">
+
+				<p:commandButton id="btnNovaQuiz" value="Criar" icon="ui-icon-document" action="#{mbean.criarQuestionario}" disabled="#{tab.flagBloqueado || !tab.flagInserir || (!empty mbean.questionarios and empty mbean.questionarios[0].id) || !tab.flagCriar || (sessionScope.atendimentoSessao.statusAtendimentoModel.flagFechado and !tab.flagPermissaoMovimentacaoFechada)}" process="@this, spQuestionarioFilho1" update="pgBtnSuperiorQuiz spQuestionarioFilho1 spQuestionarioFilho2 pnQuestionarioBtn" style="width: 83px;" />
+				<p:commandButton id="btnCopiarQuiz" value="Copiar" icon="ui-icon-copy" action="#{mbean.copiarQuestionario}" disabled="#{tab.flagBloqueado || !tab.flagInserir || mbeanModel.id == null || !tab.flagCopiar || (sessionScope.atendimentoSessao.statusAtendimentoModel.flagFechado and !tab.flagPermissaoMovimentacaoFechada)}" process="@this, spQuestionarioFilho1" update="pgBtnSuperiorQuiz spQuestionarioFilho1 spQuestionarioFilho2 pnQuestionarioBtn" style="width: 83px;" />
+
+			</h:panelGrid>
+			
+		</ui:define>
+
+		<ui:define name="scroll">
+
+			<p:dataGrid id="dgQuestionarios" var="questionario" value="#{mbean.questionarios}" emptyMessage="Nenhum registro encontrado" columns="1" style="width:100%;">
+
+				<p:panel id="pnQuestionario" styleClass="#{questionario.id == mbeanModel.id ? 'laranja' : ''} boxPaciente" >
+
+					<f:facet name="header">
+						<h:outputText rendered="#{questionario.id != null}" value="#{questionario.dataCadastro}">
+							<ui:include src="/pages/includes/include_gmt_format.xhtml" />
+						</h:outputText>
+						<h:outputText value="#{questionario.atendimentoModel.id == sessionScope.atendimentoSessao.id ? 'EM PREENCHIMENTO' : 'SEM INFORMAÃ‡ÃƒO'}" rendered="#{questionario.id == null}" />
+						<p:commandLink title="Excluir formulÃ¡rio" styleClass="ui-icon cancelar16 linkMovimentacao IconePanel" action="#{mbean.excluir(questionario)}" process="@this" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}#{idTabInterna}:pgBtnSuperiorQuiz :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}#{idTabInterna}:dgQuestionarios :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}#{idTabInterna}:spQuestionarioFilho2" rendered="#{empty questionario.id and tab.flagCriar}" />
+					</f:facet>
+
+					<p:commandLink action="#{mbean.carregarRespostas}" process="@this :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}#{idTabInterna}:spQuestionarioFilho2" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}#{idTabInterna}:dgQuestionarios :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}#{idTabInterna}:spQuestionarioFilho2">
+						<h:panelGrid columns="1" rendered="#{empty exibirCamposListaDefault ? true : exibirCamposListaDefault}">
+							<h:outputText value="NÃºmero #{questionario.id}" />
+							<h:outputText value="Atendimento #{questionario.atendimentoModel.id}" />
+							<h:outputText value="#{questionario.flagConcluido ? 'CONCLUÃ�DO' : 'ABERTO'}" styleClass="#{questionario.flagConcluido ? 'estiloVerde' : 'estiloAzul'}"/>
+							<h:outputText value="#{questionario.usuarioCadastroModel.nome}" />
+						</h:panelGrid>
+						<ui:insert name="listaQuestionario" />
+						<f:setPropertyActionListener target="#{mbeanModel}" value="#{questionario}" />
+					</p:commandLink>
+
+				</p:panel>
+
+			</p:dataGrid>
+
+		</ui:define>
+
+		<ui:define name="detalhe">
+
+			<ui:param name="grupos" value="#{mbeanModel.quizGrupos}" />
+			<ui:param name="questionarioModel" value="#{mbeanModel}" />
+			<ui:param name="paramReadOnly" value="#{false}" />
+			<ui:param name="isDisabled" value="#{mbeanModel.flagConcluido}" />
+			<ui:param name="mbeanQuiz" value="#{quizQuestionarioFaces}" />
+			<ui:param name="idAtualizacao" value=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:#{idQuiz}pgDadosQuiz" />
+
+			<ui:include src="/pages/quiz/include_quiz.xhtml" />
+
+		</ui:define>
+
+		<ui:define name="botoes">
+
+			<p:commandButton id="btnGravarQuestionario" value="Gravar" icon="salvar" action="#{mbean.gravar(false)}" process="@this pgQuestionarioPai" update="pgBtnSuperiorQuiz dgQuestionarios pnQuestionarioBtn pgDadosQuiz" disabled="#{tab.flagBloqueado}" rendered="#{!empty mbean.questionarios and tab.flagInserir and (tab.flagEditarRetroativo || !mbeanModel.flagConcluido) and (!mbeanModel.atendimentoModel.statusAtendimentoModel.flagFechado || tab.flagPermissaoMovimentacaoFechada)}" styleClass="btnPanelMedico" />
+			<p:commandButton id="btnConcluirQuestionario" value="Concluir" icon="travar" action="#{mbean.concluir}" process="@this pgQuestionarioPai" disabled="#{tab.flagBloqueado}" rendered="#{!empty mbean.questionarios and tab.flagConcluir and !mbeanModel.flagConcluido and (!mbeanModel.atendimentoModel.statusAtendimentoModel.flagFechado || tab.flagPermissaoMovimentacaoFechada)}" update="pgBtnSuperiorQuiz dgQuestionarios pnQuestionarioBtn pgDadosQuiz" oncomplete="#{tab.flagImpressaoAutomatica ? 'imprimirAutomatico(args)' : ''}" styleClass="btnPanelMedico" ajax="#{tab.flagImpressaoAutomatica ? true : false}" />
+			<p:commandButton id="btnImprimirQuestionario" value="Imprimir" icon="imprimir" disabled="#{mbeanModel.id == null or (!mbeanModel.flagConcluido and (empty flagImprimirAberto ? true : !flagImprimirAberto)) or !tab.flagImprimir}" rendered="#{!tab.flagEditarRetroativo}" action="#{mbean.imprimir}" oncomplete="imprimirPdf(args.arquivoImpressao)" styleClass="btnPanelMedico" />
+
+		</ui:define>
+
+	</ui:decorate>
+
+</ui:composition>

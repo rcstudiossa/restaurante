@@ -1,0 +1,61 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${origemFaces}" />
+	<ui:param name="mbeanModel" value="${origemFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${origemFaces.crudPesquisaModel}" />
+	<ui:param name="autoUpdateCadastro" value="false" />
+	<ui:param name="possuiDadosAtualizacao" value="${true}" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_origem.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+		</p:fieldset>
+		
+	</ui:define>
+	
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_origem.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid style="width: 100%">
+
+			<h:outputText value="Nome / Abreviação" />
+			<p:inputText value="#{mbeanPesquisaModel.descricao}" styleClass="coluna30" />
+
+			<h:outputText value="Nome da Empresa" />
+			<p:inputText value="#{mbeanPesquisaModel.nomeEmpresa}" styleClass="coluna50" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Código" styleClass="coluna10">
+			<h:outputText value="#{linha.codigo}" />
+		</p:column>
+
+		<p:column headerText="Nome" styleClass="coluna50">
+			<h:outputText value="#{linha.nome}" />
+		</p:column>
+
+		<p:column headerText="Abreviação" styleClass="coluna20">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+		<p:column headerText="Situação" styleClass="coluna10">
+			<h:outputText value="#{linha.situacao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

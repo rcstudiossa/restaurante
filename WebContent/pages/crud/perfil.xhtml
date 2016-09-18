@@ -1,0 +1,83 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${perfilFaces}" />
+	<ui:param name="mbeanModel" value="${perfilFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${perfilFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="${true}" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_perfil.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+			<p:panel>
+
+				<h:panelGrid columns="2" columnClasses="coluna70, coluna30" style="margin-left: -3px; width: 60%">
+
+					<p:outputLabel for="procedimento" value="Procedimento" />
+					<h:panelGroup />
+
+					<p:selectOneMenu id="procedimento" value="#{mbean.procedimentoModel.id}" styleClass="coluna98">
+						<f:selectItem itemValue="" itemLabel="Não Selecionado" />
+						<f:selectItems value="#{mbean.comboProcedimento}" />
+					</p:selectOneMenu>
+					<p:commandButton id="btnAddProcedimento" action="#{mbean.addProcedimento}" value="Adicionar" icon="ui-icon-plus" process="@form" update="@form" styleClass="btnAddProcedimento" />
+
+				</h:panelGrid>
+
+				<p:dataTable value="#{mbeanModel.procedimentos}" var="linha" emptyMessage="Nenhum procedimento adicionado" style="width: 100%; margin-top: 5px">
+
+					<p:column styleClass="coluna95" headerText="Procedimento">
+						<h:outputText value="#{linha.procedimentoModel.descricao}" />
+					</p:column>
+
+					<p:column headerText="Excluir" styleClass="coluna05">
+						<div align="center">
+							<p:commandLink title="Excluir procedimento do perfil" process="@form" oncomplete="PF('cdExcluirProcedimento').show()">
+								<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								<f:setPropertyActionListener value="#{linha}" target="#{perfilFaces.perfilProcedimentoModel}" />
+							</p:commandLink>
+						</div>
+					</p:column>
+
+				</p:dataTable>
+
+			</p:panel>
+
+		</p:fieldset>
+		
+		<p:confirmDialog message="Confirmar a EXCLUSÃO do procedimento?" header="Aviso" severity="alert" widgetVar="cdExcluirProcedimento" rendered="#{menuFaces.menuModel.flagExcluir}">
+			<p:commandButton process="@form" value="Sim" onclick="PF('cdExcluirProcedimento').hide()" action="#{mbean.removerProcedimento}" update="@form" />
+			<p:commandButton type="button" value="Não" onclick="PF('cdExcluirProcedimento').hide()" />
+		</p:confirmDialog>
+
+	</ui:define>
+
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_perfil.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:outputText value="Descrição" />
+		<p:inputText value="#{mbeanPesquisaModel.descricao}" styleClass="coluna47" />
+
+		<p:outputLabel for="flagAtivo" value="Ativo?" />
+		<p:selectBooleanCheckbox id="flagAtivo" value="#{mbeanPesquisaModel.flagAtivo}" />
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Descrição" styleClass="coluna95">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

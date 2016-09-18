@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rodape" pageWidth="533" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="533" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="29e796c5-76ed-4f97-94cf-cb60bb754254">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="98"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="PAGINA" class="java.lang.Integer"/>
+	<parameter name="TOTAL" class="java.lang.String"/>
+	<parameter name="NOME" class="java.lang.String"/>
+	<parameter name="CONSELHO" class="java.lang.String"/>
+	<parameter name="DELEGADO" class="java.lang.String"/>
+	<parameter name="DATA_RETROATIVA_IMPRESSAO" class="java.util.Date"/>
+	<parameter name="FLAG_ASSINATURA_PACIENTE" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DESCRICAO_ASSINATURA" class="java.lang.String">
+		<defaultValueExpression><![CDATA["PACIENTE"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FLAG_SHOW_RODAPE" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<pageFooter>
+		<band height="58" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="286" y="10" width="237" height="10" isPrintWhenDetailOverflows="true" uuid="8930b03b-563e-4bdc-b027-e602097dbeff"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOME}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="434" y="43" width="89" height="13" isRemoveLineWhenBlank="true" uuid="992b0da1-ef48-4fbc-92f7-38699001ad7d">
+					<printWhenExpression><![CDATA[$P{FLAG_SHOW_RODAPE}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Pag. " + $P{PAGINA}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="286" y="9" width="237" height="1" uuid="c312c52c-1c71-4621-ae66-fd2b07580615"/>
+			</line>
+			<textField pattern="dd/MM/yyyy HH:mm &apos;GMT&apos; Z">
+				<reportElement x="236" y="43" width="153" height="13" isRemoveLineWhenBlank="true" uuid="b564edcb-683f-4118-acf1-84c03863b8cb">
+					<printWhenExpression><![CDATA[$P{FLAG_SHOW_RODAPE}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{DATA_RETROATIVA_IMPRESSAO} != null ? $P{DATA_RETROATIVA_IMPRESSAO} : new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="175" y="43" width="56" height="13" isRemoveLineWhenBlank="true" uuid="f13f4934-22f4-447c-8c6a-8accb1f44c77">
+					<printWhenExpression><![CDATA[$P{FLAG_SHOW_RODAPE}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Impresso em: ]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

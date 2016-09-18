@@ -1,0 +1,186 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${procedimentoFaces}" />
+	<ui:param name="mbeanModel" value="${procedimentoFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${procedimentoFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="true" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset id="fdCrud" style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_procedimento.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+		</p:fieldset>
+
+		<p:panel id="pnPerguntas" header="Perguntas" style="width: 100%; margin-left: 2px;">
+
+			<div align="right">
+				<p:commandButton id="btnAddPergunta" icon="ui-icon-plus" value="Adicionar Pergunta" action="#{mbean.addPergunta}" process="@this, fdCrud, pnPerguntas" update="pnPerguntas" />
+				<p:commandButton id="btnAddObservacao" icon="ui-icon-refresh" value="Gerar Observação" action="#{mbean.addObservacao}" process="@this, fdCrud, pnPerguntas" update="pnPerguntas" rendered="#{!empty mbeanModel.perguntas}" />
+			</div>
+
+			<ui:repeat var="pergunta" value="#{mbeanModel.perguntas}" varStatus="varStatus">
+
+				<p:panel header="Pergunta #{varStatus.index + 1}" style="margin-top:2px">
+
+					<h:panelGrid columns="2" columnClasses="coluna10, coluna90" style="width: 100%">
+
+						<p:outputLabel for="codigo" value="Código" />
+						<p:outputLabel for="apelido" value="Apelido" />
+
+						<p:inputText id="codigo" value="#{pergunta.id}" disabled="true" styleClass="coluna90" />
+						<p:inputText id="apelido" value="#{pergunta.apelido}" maxlength="200" styleClass="coluna30" />
+
+					</h:panelGrid>
+
+					<h:panelGrid columns="7" columnClasses="coluna20, coluna15, coluna15, coluna15, coluna15, coluna10, coluna10" style="width: 100%">
+
+						<h:outputLabel value="Tipo de Resposta" />
+						<h:outputText value="Grupo" />
+						<h:outputText value="Subexame Pai" />
+						<h:outputText value="Unidade de Medida" />
+						<h:outputText value="Ordem" />
+						<h:outputText value="Observação" />
+						<h:outputText value="Obrigatório" />
+
+						<p:selectOneMenu value="#{pergunta.tipoRespostaModel.id}" styleClass="coluna85">
+							<f:selectItem itemLabel="Selecione" itemValue="" />
+							<f:selectItem itemLabel="Decimal" itemValue="10" />
+							<f:selectItem itemLabel="Um de vários" itemValue="4" />
+							<f:selectItem itemLabel="Vários de vários" itemValue="19" />
+							<f:selectItem itemLabel="Texto livre" itemValue="7" />
+							<p:ajax event="change" process="@this" update="pgRespostas" global="false" />
+						</p:selectOneMenu>
+						<p:selectOneMenu value="#{pergunta.grupoSubexameModel.id}" styleClass="coluna80">
+							<f:selectItem itemValue="" itemLabel="Não selecionado" />
+							<f:selectItems value="#{mbean.comboGrupoProcedimentoSubexame}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu value="#{pergunta.subexamePaiModel.id}" styleClass="coluna80">
+							<f:selectItem itemValue="" itemLabel="Não selecionado" />
+							<f:selectItems value="#{mbean.comboSubexames}" />
+						</p:selectOneMenu>
+						<p:selectOneMenu value="#{pergunta.unidadeMedidaModel.id}" styleClass="coluna80">
+							<f:selectItem itemValue="" itemLabel="Não selecionado" />
+							<f:selectItems value="#{mbean.comboUnidadeMedida}" />
+						</p:selectOneMenu>
+						<p:inputText value="#{pergunta.ordem}" maxlength="5" onkeypress="return Mascara(this,Integer);" onblur="return Mascara(this,Integer);" styleClass="coluna80" />
+						<p:selectBooleanCheckbox value="#{pergunta.flagObservacao}" />
+						<p:selectBooleanCheckbox value="#{pergunta.flagObrigatorio}" />
+
+					</h:panelGrid>
+
+					<h:panelGrid style="width: 100%">
+
+						<h:panelGroup id="pgRespostas">
+
+							<p:fieldset rendered="#{pergunta.combo or pergunta.multiploPanel}">
+
+								<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 80%">
+
+									<h:outputText value="Resposta" />
+									<h:outputText value="" />
+
+									<p:inputText id="itaResposta#{varStatus.index + 1}" value="#{pergunta.descricaoRespostas}" maxlength="100" styleClass="coluna95" onkeypress="return clickClassEnter(event, 'btnAddResposta#{varStatus.index}')" />
+									<p:commandButton id="btnAddResposta#{varStatus.index + 1}" icon="ui-icon-plus" value="Adicionar" action="#{mbean.addResposta(pergunta)}" process="@this, pgRespostas" update="pgRespostas" oncomplete="$('input[id*=itaResposta#{varStatus.index}]').focus()" styleClass="btnAddResposta#{varStatus.index}" />
+
+								</h:panelGrid>
+
+								<h:panelGrid columns="1" styleClass="coluna100">
+
+									<p:dataTable id="dtRespostas" value="#{pergunta.respostas}" var="resposta" rowIndexVar="index" emptyMessage="Nenhuma resposta adicionada">
+
+										<p:column headerText="Respostas" styleClass="coluna96">
+											<p:inputText id="resposta" value="#{resposta.resposta}" maxlength="200" onkeypress="return clickClassEnter(event, 'btnAddRespostaLinha#{index}');" styleClass="inputResposta#{index} coluna95" />
+										</p:column>
+
+										<p:column styleClass="coluna3">
+											<div align="center">
+												<p:commandLink action="#{mbean.addResposta(pergunta, index)}" process="@form" update="@form" styleClass="btnAddRespostaLinha#{index}">
+													<h:graphicImage value="../resources/images/plus16.png" style="border: 0px" />
+												</p:commandLink>
+											</div>
+										</p:column>
+
+										<p:column headerText="Remover" styleClass="coluna1">
+											<div align="center">
+												<p:commandLink id="clExcluir" action="#{mbean.removerResposta(pergunta, resposta)}" update="@form" process="@form">
+													<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+												</p:commandLink>
+											</div>
+										</p:column>
+
+									</p:dataTable>
+
+								</h:panelGrid>
+
+							</p:fieldset>
+
+						</h:panelGroup>
+
+						<h:outputText value="Referência" />
+						<p:inputTextarea value="#{pergunta.referencia}" rows="10" styleClass="coluna98" style="font-family: Courier New" autoResize="false" />
+
+						<h:outputLabel value="Ativo?" />
+						<p:selectBooleanCheckbox value="#{pergunta.flagAtivo}" />
+
+					</h:panelGrid>
+
+					<div align="right">
+						<p:commandButton id="btnAddPergunta" icon="ui-icon-close" value="Remover Pergunta" action="#{mbean.removePergunta(pergunta)}" process="@form" update="@form" rendered="#{empty pergunta.id}" />
+					</div>
+
+				</p:panel>
+
+			</ui:repeat>
+
+		</p:panel>
+
+
+	</ui:define>
+
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_procedimento.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" styleClass="coluna50">
+
+			<h:outputText value="Descrição" />
+			<p:inputText value="#{procedimentoFaces.crudPesquisaModel.descricao}" styleClass="coluna100" />
+
+			<h:outputText value="Procedimento" />
+			<p:selectOneMenu value="#{procedimentoFaces.crudPesquisaModel.procedimentoModel.id}" styleClass="coluna40">
+				<f:selectItem itemValue="" itemLabel="Selecione" />
+				<f:selectItems value="#{procedimentoFaces.comboProcedimentos}" />
+			</p:selectOneMenu>
+
+			<h:outputText value="Ativo?" />
+			<p:selectBooleanCheckbox value="#{procedimentoFaces.crudPesquisaModel.flagAtivo}" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Código" styleClass="coluna10">
+			<h:outputText value="#{linha.codigo}" />
+		</p:column>
+
+		<p:column headerText="Descrição" styleClass="coluna50">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+		<p:column headerText="Procedimento" styleClass="coluna35">
+			<h:outputText value="#{linha.procedimentoModel.descricao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

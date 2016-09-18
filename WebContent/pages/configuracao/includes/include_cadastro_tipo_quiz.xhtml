@@ -1,0 +1,42 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid columns="3" columnClasses="coluna40, coluna30, coluna30" style="width: 100%">
+
+		<p:outputLabel for="descricao" value="Descrição" />
+		<p:outputLabel for="tab" value="Tab" />
+		<p:outputLabel for="funcao" value="Função" />
+
+		<p:inputText id="descricao" value="#{mbeanModel.descricao}" maxlength="100" required="true" styleClass="coluna97" />
+		<p:selectOneMenu id="tab" value="#{mbeanModel.tabModel.id}" styleClass="coluna98">
+			<f:selectItem itemValue="" itemLabel="Não Selecionado" />
+			<f:selectItems value="#{mbean.comboTabs}" />
+		</p:selectOneMenu>
+		<p:selectOneMenu id="funcao" value="#{mbeanModel.funcaoModel.id}" styleClass="coluna98">
+			<f:selectItem itemValue="" itemLabel="Não Selecionado" />
+			<f:selectItems value="#{mbean.comboFuncoes}" />
+		</p:selectOneMenu>
+
+	</h:panelGrid>
+
+	<h:panelGrid columns="3" columnClasses="coluna30, coluna10, coluna60" style="width: 100%">
+
+		<h:outputText value="Pai" />
+		<h:outputText value="Ordem" />
+		<h:outputText value="Copiar do Questionário" />
+
+		<p:selectOneMenu value="#{mbeanModel.tipoQuizPaiModel.id}" styleClass="coluna98">
+			<f:selectItem itemLabel="Selecione" itemValue="" />
+			<f:selectItems value="#{mbean.comboTiposQuiz}" />
+		</p:selectOneMenu>
+		<p:inputText value="#{mbeanModel.ordem}" maxlength="2" onkeypress="return Mascara(this, Integer)" styleClass="coluna90" />
+		<h:panelGrid columns="2" columnClasses="coluna40, coluna60" style="width: 100%; margin-left: -2px">
+			<p:selectOneMenu value="#{mbean.tipoQuizCopiaModel.id}" styleClass="coluna98">
+				<f:selectItem itemLabel="Selecione" itemValue="" />
+				<f:selectItems value="#{mbean.comboTiposQuiz}" />
+			</p:selectOneMenu>
+			<p:commandButton value="Copiar" icon="ui-icon-copy" action="#{mbean.copiarQuiz}" update="@form" />
+		</h:panelGrid>
+
+	</h:panelGrid>
+
+</ui:composition>

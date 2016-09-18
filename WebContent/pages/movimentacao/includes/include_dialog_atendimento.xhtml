@@ -1,0 +1,50 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+	
+	<script type="text/javascript">
+		function atualizarPagina(){
+			$('#tabview\\:frmAtendimentos').submit();
+		}
+	</script>
+	
+	<p:dialog id="dialogAtendimento" header="Dados do atendimento" widgetVar="dlgCrudAtendimento" styleClass="dialog40" modal="true" closeOnEscape="true" resizable="false">
+
+		<h:panelGroup id="pgDadosAtendimento">
+
+			<p:scrollPanel id="spDadosAtendimento" mode="native" styleClass="scrollPanelDialog" style="height: calc(40vh - 95px)">
+
+				<h:panelGrid columns="2" columnClasses="coluna15, coluna85" style="width: 100%">
+
+					<p:outputLabel for="cData" value="Data*" />
+					<p:outputLabel for="somStatusAtendimento" value="Status*" />
+
+					<ts:calendar id="cData" value="#{mbeanAtendimentoModel.data}" />
+					<p:selectOneMenu id="somStatusAtendimento" value="#{mbeanAtendimentoModel.statusAtendimentoModel.id}" styleClass="coluna60">
+						<f:selectItem itemLabel="Não selecionado" itemValue="" />
+						<f:selectItems value="#{mbeanAtendimento.comboStatusAtendimento}" />
+					</p:selectOneMenu>
+
+				</h:panelGrid>
+
+				<h:panelGrid style="width: 100%">
+
+					<p:outputLabel for="somResponsavel" value="Responsável*" />
+					<p:selectOneMenu id="somResponsavel" value="#{mbeanAtendimentoModel.usuarioResponsavelModel.id}" styleClass="coluna90">
+						<f:selectItem itemLabel="Não selecionado" itemValue="" />
+						<f:selectItems value="#{mbeanAtendimento.comboUsuarioResponsavel}" />
+					</p:selectOneMenu>
+
+				</h:panelGrid>
+
+			</p:scrollPanel>
+
+			<p:panel style="margin-top: 5px">
+				<p:commandButton value="Gravar" icon="salvar" action="#{mbeanAtendimento.insertEvent}" process="@this, pgDadosAtendimento" update="pgDadosAtendimento, dtAtendimentos" oncomplete="if(args.valido){ PF('dlgCrudAtendimento').hide(); if(#{empty funcionarioAtendimentoFaces.grid}){ atualizarPagina(); }}" rendered="#{empty mbeanAtendimentoModel.id}" />
+				<p:commandButton value="Gravar" icon="salvar" action="#{mbeanAtendimento.updateEvent}" process="@this, pgDadosAtendimento" update="pgDadosAtendimento, dtAtendimentos" oncomplete="handleRequest('dlgCrudAtendimento', args)" rendered="#{!empty mbeanAtendimentoModel.id}" style="margin-left: 5px" />
+				<p:commandButton type="button" value="Fechar" icon="ui-icon-close" onclick="PF('dlgCrudAtendimento').hide();" />
+			</p:panel>
+
+		</h:panelGroup>
+
+	</p:dialog>
+
+</ui:composition>

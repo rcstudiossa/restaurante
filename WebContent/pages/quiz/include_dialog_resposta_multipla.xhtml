@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<p:dialog dynamic="true" modal="true" resizable="false" closeOnEscape="true" widgetVar="dlgRespostaMultipla" header="Selecione as opções abaixo" styleClass="dialog70">
+		
+		<p:ajax event="close" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" />
+		
+		<h:panelGroup id="pgRespostaMultipla">
+			<h:panelGrid columns="2" columnClasses="coluna50_2, coluna50_2" style="width: 100%">
+				<p:scrollPanel id="spRespostaMultipla1" mode="native" styleClass="scrollPanelDialog">
+					<p:dataTable var="resposta" value="#{mbeanExameFaces.resultadoSelecionado.quizPerguntaModel.respostas}">
+						<p:column headerText="#{mbeanExameFaces.resultadoSelecionado.quizPerguntaModel.nomePergunta}">
+							<p:commandLink title="Clique aqui para adicionar o resultado" action="#{mbeanExameFaces.adicionarResposta(resposta.resposta)}" process="@this" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgRespostaMultipla" rendered="#{!mbeanExameFaces.resultadoSelecionado.solicitacaoExameItemModel.solicitacaoRaizAux.statusAtualModel.flagFechado}">
+								<h:outputText value="#{resposta.resposta}" />
+							</p:commandLink>
+							<h:outputText value="#{resposta.resposta}" rendered="#{mbeanExameFaces.resultadoSelecionado.solicitacaoExameItemModel.solicitacaoRaizAux.statusAtualModel.flagFechado}" />
+						</p:column>
+					</p:dataTable>
+				</p:scrollPanel>
+				<p:scrollPanel id="spRespostaMultipla2" mode="native" styleClass="scrollPanelDialog">
+					<h:panelGrid columns="2" columnClasses="coluna80, coluna20" rendered="#{!mbeanExameFaces.resultadoSelecionado.solicitacaoExameItemModel.solicitacaoRaizAux.statusAtualModel.flagFechado}" style="width: 100%">
+						<p:inputText id="itRespostaLivre" value="#{mbeanExameFaces.respostaLivre}" onkeypress="return clickClassEnter(event, 'btnAddRespostaLivre')" maxlength="100" styleClass="coluna95" />
+						<p:commandButton id="btnAddRespostaLivre" value="Adicionar" icon="fa fa-plus-square" action="#{mbeanExameFaces.adicionarResposta(mbeanExameFaces.respostaLivre)}" process="@this, itRespostaLivre" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:opResultado :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgRespostaMultipla" styleClass="btnAddRespostaLivre" />
+					</h:panelGrid>
+					<p:dataTable var="resposta" value="#{mbeanExameFaces.resultadoSelecionado.respostasEscolhidas}" emptyMessage="Nenhuma opção escolhida">
+						<p:column headerText="#{mbeanExameFaces.resultadoSelecionado.quizPerguntaModel.nomePergunta} escolhida" styleClass="coluna95">
+							<h:outputText value="#{resposta}" />
+						</p:column>
+						<p:column styleClass="coluna5" rendered="#{!mbeanExameFaces.resultadoSelecionado.solicitacaoExameItemModel.solicitacaoRaizAux.statusAtualModel.flagFechado}">
+							<div align="center">
+								<p:commandLink title="Clique aqui para remover o resultado" styleClass="fa-remove fontAwesome18Red" action="#{mbeanExameFaces.removerResposta(resposta)}" process="@this" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:opResultado :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgRespostaMultipla" />
+							</div>
+						</p:column>
+					</p:dataTable>
+				</p:scrollPanel>
+			</h:panelGrid>
+			
+			<p:watermark for="itRespostaLivre" value="Texto livre" />
+			
+			<script type="text/javascript">
+				$(document).ready(function() {
+					$("div[id*=spRespostaMultipla1]").height($(window).height() * 0.7 - 120);
+					$("div[id*=spRespostaMultipla2]").height($(window).height() * 0.7 - 120);
+				});
+			</script>
+			
+			<p:panel style="margin: 5px;">
+				<p:commandButton id="btnFecharDialogRespostaMultipla" value="Fechar" icon="ui-icon-close" oncomplete="PF('dlgRespostaMultipla').hide();" />
+			</p:panel>
+		
+		</h:panelGroup>
+		
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,68 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+	
+	<script src="#{request.contextPath}/resources/js/jquery.mask.min.js" type="text/javascript" />
+
+	<p:remoteCommand name="atualizarValores" process="@this, #{idQuiz}pgDadosQuiz" update="#{idQuiz}pgDadosQuiz" global="false" />
+
+	<p:remoteCommand name="validarCampos" global="false" />
+
+	<h:panelGroup id="#{idQuiz}pgDadosQuiz">
+
+		<ui:repeat var="quizGrupo" value="#{grupos}">
+
+			<h:panelGroup id="pgGrupo" layout="block" styleClass="superiorQuiz" rendered="#{not empty quizGrupo.quizes}" >
+
+				<h:panelGrid styleClass="titlePanelQuiz" style="width: 100%; float: left">
+					<h:outputText value="#{quizGrupo.descricao}" />
+				</h:panelGrid>
+				
+				<ui:repeat var="quiz" value="#{quizGrupo.quizes}">
+
+					<h:panelGroup rendered="#{quiz.flagAtivo and empty quiz.quizPerguntaModel.arquetipos and !quiz.quizPerguntaModel.listaInputText and !quiz.quizPerguntaModel.listaInputTextArea}">
+						<ui:include src="include_pergunta_2_3_colunas.xhtml" />
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{quiz.flagAtivo and !empty quiz.quizPerguntaModel.arquetipos and !quiz.quizPerguntaModel.listaInputText and !quiz.quizPerguntaModel.listaInputTextArea}">
+						<ui:include src="include_pergunta_arquetipo.xhtml" />
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{quiz.flagAtivo and quiz.quizPerguntaModel.listaInputText}">
+						<ui:include src="include_quiz_campo_lista_input_text.xhtml" />
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{quiz.flagAtivo and quiz.quizPerguntaModel.listaInputTextArea}">
+						<ui:include src="include_quiz_campo_lista_input_textarea.xhtml" />
+					</h:panelGroup>
+
+				</ui:repeat>
+
+				<div align="right" style="float: right">
+					<h:outputText value="Total parcial de pontos: #{quizGrupo.pontuacaoAcumulada}" rendered="#{quizGrupo.exibirPontuacao}" />
+				</div>
+
+			</h:panelGroup>
+
+		</ui:repeat>
+		
+		<h:panelGrid rendered="#{questionarioModel.exibirPontuacao}" styleClass="titlePanelQuiz" style="float: left; text-align: right">
+			<h:outputText value="Total geral de pontos: #{questionarioModel.pontuacaoAcumulada}" />
+		</h:panelGrid>
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$(".readonly").attr("readonly", true);
+			});
+			var PAMaskBehavior = function (val) {
+			  return val.replace(/\D/g, '').length > 4 ? '000/009' : '00/009';
+			},
+			paOptions = {
+			  onKeyPress: function(val, e, field, options) {
+			      field.mask(PAMaskBehavior.apply({}, arguments), options);
+			    }
+			};
+			$('.paMask').mask(PAMaskBehavior, paOptions);
+		</script>
+
+	</h:panelGroup>
+
+</ui:composition>

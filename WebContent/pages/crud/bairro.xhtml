@@ -1,0 +1,66 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${bairroFaces}" />
+	<ui:param name="mbeanModel" value="${bairroFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${bairroFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="${true}" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_bairro.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+		</p:fieldset>
+
+	</ui:define>
+
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_bairro.xhtml" />
+
+	</ui:define>
+	
+	<ui:define name="pesquisaCampos">
+
+		<h:outputText value="Descrição" />
+		<p:inputText value="#{mbeanPesquisaModel.descricao}" styleClass="coluna47" />
+
+		<h:panelGrid columns="2" columnClasses="coluna20, coluna80" style="width: 50%">
+
+			<p:outputLabel for="omEstadoPequisa" value="Estado" />
+			<p:outputLabel for="omCidadePequisa" value="Cidade" />
+
+			<p:selectOneMenu id="omEstadoPequisa" value="#{mbeanPesquisaModel.cidadeModel.estadoModel.id}" styleClass="coluna95">
+				<f:selectItem itemLabel="--" itemValue="" />
+				<f:selectItems value="#{mbean.comboEstado}" />
+				<p:ajax global="false" listener="#{mbean.carregarComboCidadesPesquisa}" update="omCidadePequisa" />
+			</p:selectOneMenu>
+			<p:selectOneMenu id="omCidadePequisa" value="#{mbeanPesquisaModel.cidadeModel.id}" styleClass="coluna90">
+				<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+				<f:selectItems value="#{mbean.comboCidadePesquisa}" />
+			</p:selectOneMenu>
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Estado" styleClass="coluna10">
+			<h:outputText value="#{linha.cidadeModel.estadoModel.sigla}" />
+		</p:column>
+
+		<p:column headerText="Cidade" styleClass="coluna20">
+			<h:outputText value="#{linha.cidadeModel.descricao}" />
+		</p:column>
+
+		<p:column headerText="Descrição" styleClass="coluna60">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

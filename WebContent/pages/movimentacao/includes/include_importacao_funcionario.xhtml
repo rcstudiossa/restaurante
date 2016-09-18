@@ -1,0 +1,48 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:commandButton type="button" id="btnImportarFuncionarios" value="Importar" icon="fa fa-cloud-upload" onclick="PF('dlgImportacao').show()" rendered="#{mbean.permissaoImportarFuncionario}" style="position: absolute; top: 6px; #{empty mbeanModel.id ? 'right: 155px;' : 'right: 240px;'}" />
+
+	<p:dialog dynamic="true" closeOnEscape="true" styleClass="dialog60" resizable="false" header="Importação de funcionários" widgetVar="dlgImportacao" modal="true" rendered="#{mbean.permissaoImportarFuncionario}">
+		
+		<h:form enctype="multipart/form-data">
+		
+			<p:scrollPanel id="spImportacao" mode="native" styleClass="scrollPanelDialog" style="height: calc(60vh - 95px); padding: 5px">
+
+				<div align="center">
+					<h:outputText value="Instruções de Uso" style="font-size: 20px; color: #d18139; font-weight: bold;" />
+				</div>
+	
+				<h:panelGrid style="width: 100%">
+					
+					<h:panelGroup layout="block">
+						<h:outputText value="1. Baixe o arquivo de modelo" />
+						<a href="../MODELO_IMPORTACAO.csv" target="_blank" > 
+							<h:outputText value="aqui" style="color: #4467cc; font-weight: bold; text-decoration: underline;"/>
+						</a>
+					</h:panelGroup>
+					<h:outputText value="2. Popule o arquivo com as informações dos funcionários, fichas epidemiológicas e exames" />
+					<h:outputText value="3. Faça as substituições necessárias (Código do cargo, atividade, lotação, etc...)" />
+					<h:outputText value="4. Remova a primeira linha do arquivo (cabeçalho)" />
+					<h:outputText value="5. Substituia todos os ';' (ponto e vírgula) do conteúdo do arquivo para ',' (vírgula)" />
+					<h:outputText value="6. Salve o arquivo com a extensão .csv" />
+					<h:outputText value="7. Faça o upload do arquivo clicando no botão 'Selecionar Arquivo'" />
+					<h:outputText value="8. Confirme a importação" />
+					
+					<br/>
+					
+					<p:fileUpload value="#{mbean.arquivoImportacao}" label="Selecionar Arquivo" allowTypes="/(\.|\/)(csv)$/" invalidFileMessage="Somente arquivo com extensão csv é permitido" mode="simple" skinSimple="true" />
+	
+				</h:panelGrid>
+	
+			</p:scrollPanel>
+	
+			<p:panel style="margin-top: 5px;">
+				<p:commandButton id="btnImportar" value="Confirmar Importação" icon="ui-icon-check" action="#{mbean.importarFuncionarios}" ajax="false" onclick="PF('dlgImportacao').hide()" styleClass="btnDialog" />
+				<p:commandButton id="btnFecharDialogImportacao" type="button" value="Fechar" icon="ui-icon-close" onclick="PF('dlgImportacao').hide();" styleClass="btnDialog" />
+			</p:panel>
+		
+		</h:form>
+
+	</p:dialog>
+
+</ui:composition>

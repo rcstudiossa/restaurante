@@ -1,0 +1,53 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:form id="frmListaAtendimento">
+
+		<h:commandButton action="#{listaAgendamentoFaces.detailEvent}" styleClass="btnAtendimentoAjaxFalse" style="display:none;" />
+
+		<p:dataTable id="dtAtendimentos" value="#{listaAgendamentoFaces.grid}" var="linha" rowIndexVar="i" rows="50" paginator="true" paginatorPosition="bottom" filteredValue="#{listaAgendamentoFaces.gridFiltrado}" filterDelay="500" emptyMessage="Nenhum resultado encontrado" selectionMode="single" rowKey="#{linha}" selection="#{listaAgendamentoFaces.atendimentoSelectionModel}" style="width: 100%">
+
+			<p:ajax event="rowDblselect" process="@this" oncomplete="$('.btnAtendimentoAjaxFalse').click()" />
+
+			<p:column styleClass="coluna2 colunaRisco">
+				<h:outputText id="giInfo" styleClass="ui-icon ui-icon-info" title="#{linha.informacoes}" />
+				<p:tooltip for="giInfo" />
+			</p:column>
+
+			<p:column headerText="Matrícula" styleClass="coluna10">
+				<h:outputText value="#{linha.funcionarioModel.matricula}" />
+			</p:column>
+
+			<p:column headerText="Funcionário " styleClass="coluna40" filterBy="#{linha.funcionarioModel.nome}" filterStyle="display: inherit">
+				<h:outputText value="#{linha.funcionarioModel.nome}" />
+			</p:column>
+
+			<p:column headerText="Idade" styleClass="coluna10">
+				<h:outputText value="#{linha.funcionarioModel.descricaoIdade}" />
+			</p:column>
+
+			<p:column headerText="Sexo" styleClass="coluna5">
+				<h:outputText value="#{linha.funcionarioModel.descricaoSexo}" />
+			</p:column>
+
+			<p:column headerText="Cargo" styleClass="coluna30">
+				<h:outputText value="#{linha.funcionarioModel.cargoModel.descricao}" />
+			</p:column>
+
+			<p:column styleClass="coluna3" headerText=">>">
+				<div align="center">
+					<p:commandLink ajax="false" id="clSelecionar" action="#{listaAgendamentoFaces.detailEvent}" disabled="#{!menuFaces.menuModel.flagInserir}" rendered="#{empty listaAgendamentoFaces.gridFiltrado}">
+						<h:graphicImage value="../resources/images/lupa2.png" />
+						<f:setPropertyActionListener target="#{listaAgendamentoFaces.atendimentoModel}" value="#{linha}" />
+					</p:commandLink>
+					<p:commandLink ajax="false" id="clSelecionar2" action="#{listaAgendamentoFaces.detailEvent}" disabled="#{!menuFaces.menuModel.flagInserir}" rendered="#{!empty listaAgendamentoFaces.gridFiltrado}">
+						<h:graphicImage value="../resources/images/lupa2.png" />
+						<f:setPropertyActionListener target="#{listaAgendamentoFaces.atendimentoModel}" value="#{listaAgendamentoFaces.gridFiltrado.get(i)}" />
+					</p:commandLink>
+				</div>
+			</p:column>
+
+		</p:dataTable>
+
+	</h:form>
+
+</ui:composition>

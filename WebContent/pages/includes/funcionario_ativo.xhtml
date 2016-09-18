@@ -1,0 +1,51 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<c:if test="#{menuFaces.menuModel.flagDependeFuncionario or (!empty sessionScope.funcionarioSessao.id and menuFaces.telaFuncionario)}">
+
+		<h:form id="formFuncionarioAtivo" prependId="false">
+
+			<h:panelGroup id="divFuncionarioAtivo" layout="block" styleClass="divFuncionarioAtivo" style="padding: 5px">
+			
+				<p:panel>
+
+					<h:panelGrid id="opFuncionarioAtivoInterno" columns="5" columnClasses="coluna10, coluna10, coluna50, coluna30" style="width: 100%; font-size: 12px; font-weight: bold; color: #5c9ccc">
+
+						<h:outputLabel value="Matrícula" />
+						<h:outputLabel value="Idade" />
+						<h:outputLabel value="Funcionário" />
+						<h:outputLabel value="Status" />
+						<h:outputLabel value="" />
+
+						<h:commandLink action="#{menuFaces.redirecionarFuncionario}" value="#{sessionScope.funcionarioSessao.matricula}" style="color: #e17009" />
+						<h:commandLink action="#{menuFaces.redirecionarFuncionario}" value="#{sessionScope.funcionarioSessao.descricaoIdade}" style="color: #e17009" />
+						<h:panelGroup>
+							<h:commandLink action="#{menuFaces.redirecionarFuncionario}" value="#{sessionScope.funcionarioSessao.nome}" style="color: #e17009" />
+							<p:commandLink global="false" title="Visualizar gráfico de exames, biometria e funções vitais" process="@this" update=":formGraficoExame:tabviewGrafico" oncomplete="PF('dlgGraficoExame').show()" styleClass="fa fa-heartbeat dadosVitais" style="display: inline" />
+						</h:panelGroup>
+						<h:outputText value="#{sessionScope.atendimentoSessao.statusAtendimentoModel.descricao}" style="color: #e17009" />
+						<p:commandButton global="false" value="Iniciar Atendimento" icon="ui-icon-check" title="Iniciar o atendimento do funcionário" process="@this" oncomplete="PF('cdIniciarAtendimento').show()" rendered="#{funcionarioAtivoFaces.atendimentoModel.statusAtendimentoModel.id == 1}" style="width: 160px"/>
+						<p:commandButton global="false" value="Concluir Atendimento" icon="travar" title="Concluir o atendimento do funcionário" process="@this" oncomplete="PF('cdConcluirAtendimento').show()" rendered="#{!empty funcionarioAtivoFaces.atendimentoModel and !funcionarioAtivoFaces.atendimentoModel.statusAtendimentoModel.flagFechado}" style="width: 165px"/>
+
+					</h:panelGrid>
+
+				</p:panel>
+			
+			</h:panelGroup>
+			
+			<p:confirmDialog id="dialogIniciarAtendimento" message="Confirma o INÍCIO do atendimento?" header="Aviso" severity="alert" widgetVar="cdIniciarAtendimento" modal="true">
+				<p:commandButton ajax="false" value="Sim" onclick="PF('cdIniciarAtendimento').hide()" action="#{funcionarioAtivoFaces.iniciarAtendimento}" />
+				<p:commandButton type="button" value="Não" onclick="PF('cdIniciarAtendimento').hide()" />
+			</p:confirmDialog>
+			
+			<p:confirmDialog id="dialogConcluirAtendimento" message="Confirma a CONCLUSÃO do atendimento?" header="Aviso" severity="alert" widgetVar="cdConcluirAtendimento" modal="true">
+				<p:commandButton ajax="false" value="Sim" onclick="PF('cdConcluirAtendimento').hide()" action="#{funcionarioAtivoFaces.concluirAtendimento}" />
+				<p:commandButton type="button" value="Não" onclick="PF('cdConcluirAtendimento').hide()" />
+			</p:confirmDialog>
+			
+		</h:form>
+
+		<ui:include src="/pages/quiz/include_dialog_grafico_exame.xhtml" />
+
+	</c:if>
+
+</ui:composition>

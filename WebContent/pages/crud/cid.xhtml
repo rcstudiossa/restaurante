@@ -1,0 +1,51 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${cidFaces}" />
+	<ui:param name="mbeanModel" value="${cidFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${cidFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="${true}" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_cid.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+		</p:fieldset>
+
+	</ui:define>
+
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_cid.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:outputText value="Código" />
+		<p:inputText value="#{mbeanPesquisaModel.codigo}" styleClass="coluna10" />
+
+		<h:outputText value="Descrição" />
+		<p:inputText value="#{mbeanPesquisaModel.descricao}" styleClass="coluna47" />
+
+		<p:outputLabel for="flagAtivo" value="Ativo?" />
+		<p:selectBooleanCheckbox id="flagAtivo" value="#{mbeanPesquisaModel.flagAtivo}" />
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Código" styleClass="coluna15">
+			<h:outputText value="#{linha.codigo}" />
+		</p:column>
+
+		<p:column headerText="Descrição" styleClass="coluna80">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

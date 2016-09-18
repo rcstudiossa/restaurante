@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="atendimentosPeriodo" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="523d4ef0-5839-4ba0-b2f5-6a162323747e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DATA_INICIO" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_FIM" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ORIGEM_ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["F:\\Java\\Projetos\\sistemabasico\\WebContent\\WEB-INF\\relatorios\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATA_CONVOCACAO" class="java.sql.Timestamp"/>
+	<queryString>
+		<![CDATA[SELECT A.ID ATENDIMENTO_ID
+  FROM ATENDIMENTO A, FUNCIONARIO F
+ WHERE F.ID = A.FUNCIONARIO_ID
+   AND DATE(A.DATA_CADASTRO) BETWEEN $P{DATA_INICIO} AND $P{DATA_FIM}
+   AND A.ORIGEM_ID = COALESCE($P{ORIGEM_ID}, A.ORIGEM_ID)
+ ORDER BY CONVERTER(F.NOME, 'top10sysSistemas')]]>
+	</queryString>
+	<field name="atendimento_id" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="595" height="100" uuid="027ad64e-3cd8-46c9-9114-566dc8751ec2"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="DATA_CONVOCACAO">
+					<subreportParameterExpression><![CDATA[$P{DATA_CONVOCACAO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ATENDIMENTO_ID">
+					<subreportParameterExpression><![CDATA[$F{atendimento_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "atendimentoCompleto.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>

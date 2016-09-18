@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:panelGrid id="#{titlePai}" columns="2" style="width: 100%" columnClasses="colunaEvolucao, colunaEvolucaoDetalhe">
+
+		<h:panelGrid id="#{titleFilho1}" columns="1" style="width: 100%">
+
+			<ui:insert name="botoesScrollSuperior" />
+
+			<p:scrollPanel mode="native" styleClass="scrollLateral" style="#{tab.flagCriar ? 'height: calc(100vh - 207px)' : 'height: calc(100vh - 222px)'}">
+
+				<ui:insert name="scroll" />
+
+			</p:scrollPanel>
+
+		</h:panelGrid>
+
+		<h:panelGrid id="#{titleFilho2}" columns="1" style="width: 100%">
+
+			<ui:insert name="acimaScroll" />
+
+			<p:scrollPanel mode="native" styleClass="scrollCentral" style="width: 99.7%; #{empty flagEsconderRodape || !flagEsconderRodape ? 'height: calc(100vh - 227px)' : 'height: calc(100vh - 179px)'}">
+
+				<ui:insert name="detalhe" />
+
+			</p:scrollPanel>
+
+			<ui:insert name="abaixoScroll" />
+
+			<p:panel id="#{titleBtn}" rendered="#{empty flagEsconderRodape ? 'true' : !flagEsconderRodape}" style="min-height: 44px">
+
+				<ui:insert name="botoes" />
+
+			</p:panel>
+
+		</h:panelGrid>
+
+	</h:panelGrid>
+
+</ui:composition>

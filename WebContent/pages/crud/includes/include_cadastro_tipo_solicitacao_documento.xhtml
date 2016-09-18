@@ -1,0 +1,78 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid columns="2" columnClasses="coluna50_2, coluna50_2" styleClass="coluna100">
+
+		<h:panelGroup>
+
+			<h:panelGrid columns="1" style="width: 100%">
+
+				<p:outputLabel for="itDescricao" value="Descrição" />
+				<p:inputText id="itDescricao" value="#{mbeanModel.descricao}" maxlength="100" required="true" disabled="#{disabled}" styleClass="coluna95" />
+
+				<p:outputLabel for="tipoQuiz" value="Tipo de Quiz" />
+				<p:selectOneMenu id="tipoQuiz" value="#{mbeanModel.tipoQuizModel.id}" disabled="#{disabled}" styleClass="coluna92">
+					<f:selectItem itemLabel="Não selecionado" itemValue="" />
+					<f:selectItems value="#{mbean.comboTipoQuiz}" />
+				</p:selectOneMenu>
+
+				<h:panelGrid columns="2" columnClasses="coluna20, coluna80" style="width: 100%; margin-left: -3px">
+
+					<p:outputLabel for="sbEditavel" value="Editável?" />
+					<p:outputLabel for="sbConcluir" value="Concluir?" />
+
+					<p:selectBooleanCheckbox id="sbEditavel" value="#{mbeanModel.flagEditavel}" />
+					<p:selectBooleanCheckbox id="sbConcluir" value="#{mbeanModel.flagConcluir}" />
+
+				</h:panelGrid>
+
+			</h:panelGrid>
+
+		</h:panelGroup>
+
+		<p:panel header="Funções que podem solicitar o documento">
+
+			<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 100%; margin-left: -3px">
+
+				<h:outputText value="Função" />
+				<h:outputText value="" />
+
+				<p:selectOneMenu value="#{mbean.funcaoModel.id}" disabled="#{disabled}" styleClass="coluna90">
+					<f:selectItem itemValue="" itemLabel="Selecione" />
+					<f:selectItems value="#{mbean.comboFuncoes}" />
+				</p:selectOneMenu>
+				<p:commandButton id="btnAddFuncao" action="#{mbean.addFuncao}" value="Adicionar" icon="ui-icon-plus" process="@form" update="@form" rendered="#{!disabled}" />
+
+			</h:panelGrid>
+
+			<p:dataTable id="gridFuncao" emptyMessage="Nenhuma origem adicionada" value="#{mbeanModel.funcoes}" var="tipoSolicitacaoDocumento" style="width: 100%">
+
+				<p:column headerText="Função" styleClass="coluna85">
+					<h:outputText value="#{tipoSolicitacaoDocumento.funcaoModel.descricao}" />
+				</p:column>
+
+				<p:column headerText="Excluir" styleClass="coluna015">
+					<div align="center">
+						<p:commandLink id="clExcluir" action="#{mbean.delOrigem}" process="@form" update="@form" rendered="#{menuFaces.menuModel.flagAlterar}">
+							<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+							<f:setPropertyActionListener target="#{tipoSolicitacaoDocumentoFaces.tipoSolicitacaoDocumentoFuncaoModel}" value="#{tipoSolicitacaoDocumento}" />
+						</p:commandLink>
+					</div>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panel>
+
+	</h:panelGrid>
+
+	<h:panelGrid columns="1" style="width: 100%">
+
+		<p:outputLabel for="itTexto" value="Texto Referência" />
+		<p:inputTextarea id="itTexto" value="#{mbeanModel.referencia}" rows="20" autoResize="false" style="width: 100%" />
+		<h:panelGrid style="width: 100%">
+			<h:outputText value="Substituição automática: [NOME_FUNCIONARIO], [RG_FUNCIONARIO], [CPF_FUNCIONARIO], [ORIGEM], [ORIGEM_COMPLETA], [ORIGEM_CIDADE], [DATA_ATUAL], [DATA_HORA_ATUAL], [USUARIO_RESPONSAVEL]" style="font-size: 10px" />
+		</h:panelGrid>
+
+	</h:panelGrid>
+
+</ui:composition>

@@ -1,0 +1,52 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<p:calendar rendered="#{quiz.quizPerguntaModel.data}" pattern="dd/MM/yyyy" value="#{quiz.dataEscolhida}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" maxlength="10" navigator="true" onkeydown="maskDate(this,event,'dd/MM/yyyy')" onblur="blurDate(this)" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}">
+		<p:ajax event="dateSelect" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" />
+	</p:calendar>
+	<p:calendar rendered="#{quiz.quizPerguntaModel.hora}" pattern="HH:mm" onkeydown="maskDate(this,event,'HH:mm')" timeOnly="true" value="#{quiz.dataEscolhida}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}" />
+	<p:calendar rendered="#{quiz.quizPerguntaModel.dataHora}" pattern="dd/MM/yyyy HH:mm" value="#{quiz.dataEscolhida}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" maxlength="16" navigator="true" onkeydown="maskDate(this,event,'dd/MM/yyyy HH:mm')" onblur="blurDate(this)" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}">
+		<p:ajax event="dateSelect" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" />
+	</p:calendar>
+	<p:inputText rendered="#{quiz.quizPerguntaModel.numerico}" value="#{quiz.respostaEscolhida}" onkeypress="return disableEnter(event);" maxlength="#{quiz.maxlength}" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}">
+		<p:keyFilter regEx="/[\d]/" />
+		<p:ajax event="change" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" global="false" />
+	</p:inputText>
+	<p:inputText rendered="#{quiz.quizPerguntaModel.keyFilter}" maxlength="#{quiz.maxlength}" value="#{quiz.respostaEscolhida}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}">
+		<p:keyFilter regEx="#{quiz.quizPerguntaModel.pattern}"/> 
+		<p:ajax event="change" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" global="false" />
+	</p:inputText>
+	<p:inputText rendered="#{quiz.quizPerguntaModel.pontoFlutuante}" value="#{quiz.respostaEscolhida}" onkeypress="return disableEnter(event);" maxlength="#{quiz.maxlength}" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado || !empty quiz.quizPerguntaModel.formula}" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}">
+		<p:keyFilter regEx="/[\d\s,]/" />
+		<p:ajax event="change" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" global="false" />
+	</p:inputText>
+	<p:inputText rendered="#{quiz.quizPerguntaModel.inputTexto}" maxlength="#{quiz.maxlength}" value="#{quiz.respostaEscolhida}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}">
+		<p:ajax event="change" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" global="false" />
+	</p:inputText>
+	<p:inputText rendered="#{quiz.quizPerguntaModel.consequencia}" value="#{quiz.respostaEscolhida}" onkeypress="return disableEnter(event);" disabled="true" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}" />
+	<p:inputText rendered="#{quiz.quizPerguntaModel.jqueryMask}" value="#{quiz.respostaEscolhida}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'} #{quiz.quizPerguntaModel.pattern}" >
+		<p:ajax event="change" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" global="false" />
+	</p:inputText>
+	<p:inputMask slotChar="" rendered="#{quiz.quizPerguntaModel.inputMask}" mask="#{quiz.quizPerguntaModel.pattern}" maxlength="#{quiz.maxlength}" value="#{quiz.respostaEscolhida}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="#{empty layoutOrdem ? 'coluna995' : 'coluna95'}">
+		<p:ajax event="change" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" global="false" />
+	</p:inputMask>
+	<p:inputTextarea rendered="#{quiz.quizPerguntaModel.texto}" onkeypress="#{quiz.flagTamanhoFixo ? 'return limitTextareaLine(this)' : ''}" maxlength="#{quiz.maxlength}" value="#{quiz.respostaEscolhida}" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" rows="#{quiz.rows}" autoResize="false" style="width: 100%" />
+	<p:inputTextarea rendered="#{quiz.quizPerguntaModel.informativa}" maxlength="#{quiz.maxlength}" value="#{quiz.respostaEscolhida}" readonly="true" rows="#{quiz.rows}" autoResize="false" style="width: 100%" />
+	<p:selectOneMenu rendered="#{quiz.quizPerguntaModel.combo}" value="#{quiz.respostaEscolhida}" onchange="#{quiz.flagPossuiDependentes || quiz.flagPossuiPontuacao ? 'atualizarValores()' : ''}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" style="width:99.5%" >
+		<f:selectItem itemLabel="Não Selecionado" itemValue=" " />
+		<f:selectItems var="resposta" value="#{quiz.quizPerguntaModel.respostas}" itemLabel="#{resposta.resposta}" itemValue="#{resposta.resposta}" />
+		<p:ajax event="change" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}"  />
+	</p:selectOneMenu>
+	<p:selectOneMenu rendered="#{quiz.quizPerguntaModel.comboSQL}" onchange="#{quiz.flagPossuiDependentes || quiz.flagPossuiPontuacao ? 'atualizarValores()' : ''}" value="#{quiz.respostaEscolhida}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" style="width:99.5%" >
+		<f:selectItem itemLabel="Não Selecionado" itemValue="" />
+		<f:selectItems var="resposta" value="#{quiz.quizPerguntaModel.respostas}" itemLabel="#{resposta.resposta}" itemValue="#{resposta.id}" />
+		<p:ajax event="change" listener="#{mbeanQuiz.processarCampo(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}"  />
+	</p:selectOneMenu>
+	<h:selectOneRadio rendered="#{quiz.quizPerguntaModel.radio}" value="#{quiz.respostaEscolhida}" onchange="#{quiz.flagPossuiDependentes || quiz.flagPossuiPontuacao ? 'atualizarValores()' : ''}"  onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="radioMargin #{quiz.cssAjuste}">
+		<f:selectItems var="resposta" value="#{quiz.quizPerguntaModel.respostas}" itemLabel="#{resposta.resposta}" itemValue="#{resposta.resposta}" />
+	</h:selectOneRadio>
+	<p:selectManyCheckbox rendered="#{quiz.quizPerguntaModel.multiplo}" columns="#{quiz.maxlength > 0 ? quiz.maxlength : '7'}" layout="grid" onchange="#{quiz.flagPossuiDependentes || quiz.flagPossuiPontuacao ? 'atualizarValores()' : ''}" value="#{quiz.respostasEscolhidas}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="checkMarginQuiz #{quiz.cssAjuste}" style="margin-bottom: 0px;">
+		<f:selectItems var="resposta" value="#{quiz.quizPerguntaModel.respostas}" itemLabel="#{resposta.resposta}" itemValue="#{resposta.resposta}" />
+	</p:selectManyCheckbox>
+	<p:selectBooleanCheckbox rendered="#{quiz.quizPerguntaModel.booleano}" onchange="#{quiz.flagPossuiDependentes || quiz.flagPossuiPontuacao ? 'atualizarValores()' : ''}" value="#{quiz.booleanEscolhido}" onkeypress="return disableEnter(event);" disabled="#{(!empty quiz.quizRespostaDependenteModel.id and !quizGrupo.quizes[quiz.rowindexDependente].respostaDada.contains(quiz.quizRespostaDependenteModel.resposta)) || isDisabled || quiz.flagDesabilitado}" styleClass="#{quiz.cssAjuste}" />
+
+</ui:composition>

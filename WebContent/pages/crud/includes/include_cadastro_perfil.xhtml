@@ -1,0 +1,13 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid style="width: 50%">
+
+		<p:outputLabel for="itDescricao" value="Descrição" />
+		<p:inputText id="itDescricao" value="#{mbeanModel.descricao}" required="true" maxlength="100" styleClass="coluna95" />
+
+		<p:outputLabel for="flagAtivo" value="Ativo?" />
+		<p:selectBooleanCheckbox id="flagAtivo" value="#{mbeanModel.flagAtivo}" />
+
+	</h:panelGrid>
+
+</ui:composition>

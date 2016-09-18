@@ -1,0 +1,71 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid width="100%" columns="1" columnClasses="coluna100">
+
+		<h:panelGrid columns="5" columnClasses="coluna10, coluna35, coluna15, coluna15, coluna10" style="width: 100%">
+
+			<h:outputLabel for="itCodigo" value="Código" />
+			<p:outputLabel for="itNome" value="Nome" />
+			<p:outputLabel for="itDescricao" value="Abreviação" />
+			<h:outputLabel value="GMT" />
+			<h:outputLabel for="cbFlagAtivo" value="Ativo?" />
+
+			<p:inputText id="itCodigo" value="#{mbeanModel.codigo}" maxlength="50" disabled="#{disabled}" style="width: 95%" />
+			<p:inputText id="itNome" value="#{mbeanModel.nome}" maxlength="50" disabled="#{disabled}" style="width: 95%" required="true" />
+			<p:inputText id="itDescricao" value="#{mbeanModel.descricao}" maxlength="50" disabled="#{disabled}" style="width: 95%" required="true" />
+			<p:selectOneMenu id="itGMt" value="#{mbeanModel.gmt}" disabled="#{disabled}" style="width: 80%">
+				<f:selectItem itemLabel="GMT-3:00" itemValue="GMT-3:00" />
+			</p:selectOneMenu>
+			<p:selectBooleanCheckbox id="cbFlagAtivo" value="#{mbeanModel.flagAtivo}" disabled="#{disabled}" />
+
+		</h:panelGrid>
+
+		<h:panelGrid style="width: 100%">
+
+			<p:outputLabel for="nomeEmpresa" value="Nome da Empresa" />
+			<p:inputText id="nomeEmpresa" value="#{mbeanModel.nomeEmpresa}" required="true" maxlength="200" disabled="#{disabled}" style="width: 100%" />
+
+			<p:outputLabel for="endereco" value="Endereco" />
+			<p:inputTextarea id="endereco" rows="2" autoResize="false" value="#{mbeanModel.endereco}" maxlength="1000" disabled="#{disabled}" style="width: 100%" />
+
+		</h:panelGrid>
+
+		<h:panelGrid columns="2" columnClasses="coluna50, coluna50" style="width: 100%">
+
+			<p:panel header="Município">
+
+				<h:panelGrid columns="2" columnClasses="coluna30, coluna70" style="width: 100%">
+
+					<p:outputLabel for="omEstado" value="Estado" />
+					<p:outputLabel for="omCidade" value="Município" rendered="#{!disabled}" />
+					<p:outputLabel for="omCidadeDisabled" value="Município" rendered="#{disabled}" />
+
+					<p:selectOneMenu id="omEstado" value="#{mbeanModel.cidadeModel.estadoModel.id}" required="true" disabled="#{disabled}" styleClass="coluna98">
+						<f:selectItem itemValue="" itemLabel="--" />
+						<f:selectItems value="#{origemFaces.comboEstados}" />
+						<p:ajax event="change" listener="#{origemFaces.atualizarCidades}" update="omCidade" />
+					</p:selectOneMenu>
+					<p:selectOneMenu id="omCidade" value="#{mbeanModel.cidadeModel.id}" required="true" rendered="#{!disabled}" styleClass="coluna98">
+						<f:selectItem itemValue="" itemLabel="Selecione" />
+						<f:selectItems value="#{origemFaces.comboCidades}" />
+					</p:selectOneMenu>
+					<p:inputText id="omCidadeDisabled" value="#{mbeanModel.cidadeModel.descricao}" disabled="true" rendered="#{disabled}" styleClass="coluna85" />
+
+				</h:panelGrid>
+
+			</p:panel>
+
+			<p:panel header="Emissão de Contas">
+				<h:panelGrid columns="2" styleClass="coluna100" columnClasses="coluna30, coluna70">
+					<h:outputLabel value="CNPJ" />
+					<h:outputLabel value="Razão Social" />
+					<p:inputMask mask="99.999.999/9999-99" value="#{mbeanModel.cnpj}" disabled="#{disabled}" style="width: 90%" />
+					<p:inputText value="#{mbeanModel.razaoSocial}" maxlength="250" disabled="#{disabled}" style="width: 100%" />
+				</h:panelGrid>
+			</p:panel>
+
+		</h:panelGrid>
+
+	</h:panelGrid>
+
+</ui:composition>

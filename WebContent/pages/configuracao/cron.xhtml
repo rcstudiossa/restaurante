@@ -1,0 +1,79 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${cronFaces}" />
+	<ui:param name="mbeanModel" value="${cronFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${cronFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="true" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_cron.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+		</p:fieldset>
+
+	</ui:define>
+	
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_cron.xhtml">
+			<ui:param name="disabled" value="${false}" />
+		</ui:include>
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" styleClass="coluna50">
+
+			<h:outputLabel for="itDescricaoPesquisa" value="Descrição" />
+			<p:inputText id="itDescricaoPesquisa" value="#{mbeanPesquisaModel.descricao}" style="width: 100%" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Descrição" styleClass="coluna50">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+		<p:column headerText="Data inicial" styleClass="coluna10">
+			<h:outputText value="#{linha.dataInicial}">
+				<f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR" timeZone="#{sessionScope.origemAtual.gmt}" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Data final" styleClass="coluna10">
+			<h:outputText value="#{linha.dataFinal}">
+				<f:convertDateTime pattern="dd/MM/yyyy" locale="pt_BR" timeZone="#{sessionScope.origemAtual.gmt}" />
+			</h:outputText>
+		</p:column>
+
+		<p:column headerText="Horas" styleClass="coluna05">
+			<h:outputText value="#{linha.horas}" />
+		</p:column>
+
+		<p:column headerText="Minutos" styleClass="coluna05">
+			<h:outputText value="#{linha.minutos}" />
+		</p:column>
+
+		<p:column headerText="Dia da Semana" styleClass="coluna05">
+			<h:outputText value="#{linha.diaSemana}" />
+		</p:column>
+
+		<p:column headerText="Dia do mês" styleClass="coluna05">
+			<h:outputText value="#{linha.diaMes}" />
+		</p:column>
+
+		<p:column headerText="Mês" styleClass="coluna05">
+			<h:outputText value="#{linha.mes}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

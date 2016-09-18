@@ -1,0 +1,125 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbeanModel" value="#{solicitacaoDocumentoFaces.crudModel}" />
+
+	<ui:decorate template="/pages/includes/decorate_atendimento.xhtml">
+
+		<ui:param name="titlePai" value="pgSolicitacaoDocumento" />
+		<ui:param name="titleFilho1" value="spSolicitacaoDocumentoFilho1" />
+		<ui:param name="titleFilho2" value="spSolicitacaoDocumentoFilho2" />
+		<ui:param name="titleBtn" value="pnSolicitacaoDocumentoBotoes" />
+		<ui:param name="titleTabView" value="tvSolicitacaoDocumentoDetalhe" />
+
+		<ui:define name="botoesScrollSuperior">
+
+			<h:panelGrid id="pgBtnSuperiorSolicitacaoDocumento" styleClass="botoesCriacao" style="width: 100%" columns="2" columnClasses="coluna50, coluna50">
+
+				<p:commandButton id="btnNovoDoc" value="Criar" icon="ui-icon-document" action="#{solicitacaoDocumentoFaces.criar}" process="@this, spSolicitacaoDocumentoFilho1" update="spSolicitacaoDocumentoFilho2 pgBtnSuperiorSolicitacaoDocumento dgSolicitacaoDocumento" oncomplete="PF('dlgEscolherDocumento').show()" disabled="#{tab.flagBloqueado || !tab.flagInserir || (sessionScope.atendimentoSessao.statusAtendimentoModel.flagFechado and !tab.flagPermissaoMovimentacaoFechada)}" style="width: 90px;" />
+				<p:commandButton id="btnCopiarDoc" value="Copiar" icon="ui-icon-copy" action="#{solicitacaoDocumentoFaces.copiar}" process="@this, spSolicitacaoDocumentoFilho1" update="spSolicitacaoDocumentoFilho2 pgBtnSuperiorSolicitacaoDocumento dgSolicitacaoDocumento" disabled="#{tab.flagBloqueado || mbeanModel.id == null || !tab.flagInserir || (sessionScope.atendimentoSessao.statusAtendimentoModel.flagFechado and !tab.flagPermissaoMovimentacaoFechada)}" style="width: 90px;" />
+
+			</h:panelGrid>
+
+		</ui:define>
+
+		<ui:define name="scroll">
+
+			<p:dialog dynamic="true" modal="true" resizable="false" closeOnEscape="true" widgetVar="dlgEscolherDocumento" header="Escolha o documento que deseja criar" width="480" style="font-size: 12px">
+
+				<h:panelGroup id="pgEscolherDocumento">
+
+					<p:scrollPanel id="spEscolherDocumento" mode="native" styleClass="scrollPanelDialog" style="height: calc(60vh - 120px)">
+
+						<div align="center" style="margin-top: 5px">
+
+							<ui:repeat var="documento" value="#{solicitacaoDocumentoFaces.tiposSolicitacoesDocumentos}">
+
+								<p:commandButton icon="fa fa-file-text" value="#{documento.descricao}" action="#{solicitacaoDocumentoFaces.addSolicitacaoDocumento(documento)}" process="@this" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spSolicitacaoDocumentoFilho2 :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgBtnSuperiorSolicitacaoDocumento :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:dgSolicitacaoDocumento :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pnSolicitacaoDocumentoBotoes" oncomplete="PF('dlgEscolherDocumento').hide()" style="width: 350px; min-height: 40px; margin-bottom: 3px;" />
+								<br />
+
+							</ui:repeat>
+
+						</div>
+
+					</p:scrollPanel>
+
+					<p:panel style="margin-top: 5px;">
+						<p:commandButton id="btnFecharDialogDocumento" type="button" value="Fechar" icon="ui-icon-close" onclick="PF('dlgEscolherDocumento').hide();" />
+					</p:panel>
+
+				</h:panelGroup>
+
+			</p:dialog>
+
+			<p:dataGrid id="dgSolicitacaoDocumento" var="doc" value="#{solicitacaoDocumentoFaces.grid}" columns="1" style="width:100%;" emptyMessage="Nenhum Documento">
+
+				<p:panel styleClass="#{doc.id == solicitacaoDocumentoFaces.crudModel.id ? 'laranja' : ''} boxPaciente">
+
+					<f:facet name="header">
+						<h:outputText rendered="#{doc.id != null}" value="#{doc.dataCadastro}">
+							<ui:include src="/pages/includes/include_gmt_format.xhtml" />
+						</h:outputText>
+						<h:outputText value="#{doc.atendimentoModel.id == sessionScope.atendimentoSessao.id ? 'EM PREENCHIMENTO' : 'SEM INFORMAÃ‡ÃƒO'}" rendered="#{doc.id == null}" />
+						<p:commandLink title="Excluir documento" styleClass="ui-icon cancelar16 linkMovimentacao IconePanel" action="#{solicitacaoDocumentoFaces.excluir(doc)}" process="@this" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spSolicitacaoDocumentoFilho2 :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgBtnSuperiorSolicitacaoDocumento :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:dgSolicitacaoDocumento" rendered="#{empty doc.id}" />
+					</f:facet>
+
+					<p:commandLink action="#{solicitacaoDocumentoFaces.atualizarDocumento}" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spSolicitacaoDocumentoFilho2 :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgBtnSuperiorSolicitacaoDocumento :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:dgSolicitacaoDocumento">
+						<h:panelGrid columns="1" rendered="#{empty exibirCamposListaDefault ? true : exibirCamposListaDefault}">
+							<h:outputText value="NÂº #{doc.atendimentoModel.id}" />
+							<h:outputText value="#{doc.flagConcluido ? 'CONCLUÃ�DO' : 'ABERTO'}" styleClass="#{doc.flagConcluido ? 'estiloVerde' : 'estiloAzul'}"/>
+							<h:outputText value="#{doc.tipoSolicitacaoDocumentoModel.descricao}" />
+							<h:outputText value="#{doc.usuarioCadastroModel.nome}" />
+						</h:panelGrid>
+						<f:setPropertyActionListener value="#{doc}" target="#{solicitacaoDocumentoFaces.crudModel}" />
+					</p:commandLink>
+
+				</p:panel>
+
+			</p:dataGrid>
+
+		</ui:define>
+
+		<ui:define name="detalhe">
+
+			<c:choose>
+
+				<c:when test="#{!empty mbeanModel.tipoSolicitacaoDocumentoModel.tipoQuizModel.id}">
+
+					<ui:param name="grupos" value="#{mbeanModel.quizQuestionarioModel.quizGrupos}" />
+					<ui:param name="questionarioModel" value="#{mbeanModel.quizQuestionarioModel}" />
+					<ui:param name="paramReadOnly" value="#{mbeanModel.flagConcluido}" />
+					<ui:param name="mbeanQuiz" value="#{solicitacaoDocumentoFaces}" />
+					<ui:param name="idAtualizacao" value=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgDadosQuiz" />
+
+					<ui:include src="/pages/quiz/include_quiz.xhtml" />
+
+				</c:when>
+
+				<c:otherwise>
+
+					<div align="center">
+
+						<h:outputLabel for="textoSolicitacao" value="#{solicitacaoDocumentoFaces.crudModel.tipoSolicitacaoDocumentoModel.descricao}" rendered="#{!empty solicitacaoDocumentoFaces.grid}" style="font-weight: bold; margin-top: 5px" />
+						<p:inputTextarea id="textoSolicitacao" value="#{solicitacaoDocumentoFaces.crudModel.texto}" readonly="#{!solicitacaoDocumentoFaces.crudModel.tipoSolicitacaoDocumentoModel.flagEditavel or solicitacaoDocumentoFaces.crudModel.flagConcluido}" rendered="#{!empty solicitacaoDocumentoFaces.grid}" styleClass="textoSolicitacao" style="width: 95%; height: calc(100vh - 300px); margin-top: 5px" autoResize="false" />
+
+					</div>
+
+				</c:otherwise>
+
+			</c:choose>
+			
+		</ui:define>
+
+		<ui:define name="botoes">
+
+			<p:commandButton value="Gravar" icon="salvar" action="#{solicitacaoDocumentoFaces.insertEvent}" update="@this dgSolicitacaoDocumento pnSolicitacaoDocumentoBotoes pgBtnSuperiorSolicitacaoDocumento" rendered="#{!empty solicitacaoDocumentoFaces.grid and solicitacaoDocumentoFaces.permissao and tab.flagInserir and empty solicitacaoDocumentoFaces.crudModel.id and !solicitacaoDocumentoFaces.crudModel.flagConcluido and (!mbeanModel.atendimentoModel.statusAtendimentoModel.flagFechado || tab.flagPermissaoMovimentacaoFechada)}" disabled="#{tab.flagBloqueado}" styleClass="btnPanelMedico" />
+			<p:commandButton value="Gravar" icon="salvar" action="#{solicitacaoDocumentoFaces.updateEvent}" update="@this dgSolicitacaoDocumento pnSolicitacaoDocumentoBotoes pgBtnSuperiorSolicitacaoDocumento" rendered="#{!empty solicitacaoDocumentoFaces.grid and solicitacaoDocumentoFaces.permissao and tab.flagAlterar and !empty solicitacaoDocumentoFaces.crudModel.id and !solicitacaoDocumentoFaces.crudModel.flagConcluido and (!mbeanModel.atendimentoModel.statusAtendimentoModel.flagFechado || tab.flagPermissaoMovimentacaoFechada)}" styleClass="btnPanelMedico" />
+
+			<p:commandButton value="Concluir" icon="travar" action="#{solicitacaoDocumentoFaces.concluir}" update="@this dgSolicitacaoDocumento pnSolicitacaoDocumentoBotoes pgBtnSuperiorSolicitacaoDocumento" oncomplete="#{tab.flagImpressaoAutomatica ? 'imprimirAutomatico(args)' : ''}" rendered="#{solicitacaoDocumentoFaces.permissao and tab.flagAlterar and !empty solicitacaoDocumentoFaces.crudModel.id and solicitacaoDocumentoFaces.crudModel.tipoSolicitacaoDocumentoModel.flagConcluir and !solicitacaoDocumentoFaces.crudModel.flagConcluido}" styleClass="btnPanelMedico" ajax="#{tab.flagImpressaoAutomatica ? true : (tab.flagPularTab ? false : true)}" />
+
+			<p:commandButton value="Imprimir" icon="imprimir" action="#{solicitacaoDocumentoFaces.imprimir}" oncomplete="imprimirPdf(args.arquivoImpressao)" disabled="#{empty solicitacaoDocumentoFaces.crudModel.id or !solicitacaoDocumentoFaces.crudModel.flagAtivo or !tab.flagImprimir or (solicitacaoDocumentoFaces.crudModel.tipoSolicitacaoDocumentoModel.flagConcluir and !solicitacaoDocumentoFaces.crudModel.flagConcluido)}" styleClass="btnPanelMedico" />
+
+		</ui:define>
+
+	</ui:decorate>
+
+</ui:composition>

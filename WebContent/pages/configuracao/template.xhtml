@@ -1,0 +1,167 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${templateFaces}" />
+	<ui:param name="mbeanModel" value="${templateFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${templateFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="true" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_template.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+			<h:panelGrid width="100%" columns="4" columnClasses="coluna25, coluna10, coluna25, coluna40">
+
+				<p:outputLabel for="tab" value="Tab" />
+				<h:outputText value="" />
+				<p:outputLabel for="tabCopia" value="Template de Origem" />
+				<h:outputText value="" />
+
+				<p:selectOneMenu id="tab" value="#{mbean.tabSelecionada.id}" styleClass="coluna98">
+					<f:selectItem itemLabel="Selecione" itemValue="" />
+					<f:selectItems value="#{mbean.comboTabs}" />
+				</p:selectOneMenu>
+				<p:commandButton id="btnAddTab" icon="ui-icon-plus" value="Adicionar" action="#{mbean.addTab}" process="@this, tab, dtTabs" update="dtTabs" />
+				<p:selectOneMenu id="tabCopia" value="#{mbean.templateModel.id}" styleClass="coluna98">
+					<f:selectItem itemLabel="Selecione" itemValue="" />
+					<f:selectItems value="#{mbean.comboTemplates}" />
+				</p:selectOneMenu>
+				<p:commandButton id="btnCopiar" icon="ui-icon-copy" value="Copiar" action="#{mbean.copiar}" process="@this, tabCopia, dtTabs" update="dtTabs" />
+
+			</h:panelGrid>
+
+			<p:dataTable id="dtTabs" value="#{mbeanModel.tabs}" var="tab" emptyMessage="Nenhuma tab adicionada" style="width: 100%">
+
+				<p:column headerText="Tab" styleClass="coluna34">
+					<h:outputText value="#{tab.tabModel.descricao}" />
+				</p:column>
+
+				<p:column headerText="Inserir" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagInserir}" />
+				</p:column>
+
+				<p:column headerText="Alterar" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagAlterar}" />
+				</p:column>
+
+				<p:column headerText="Excluir" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagExcluir}" />
+				</p:column>
+
+				<p:column headerText="Concluir" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagConcluir}" />
+				</p:column>
+
+				<p:column headerText="Imprimir" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagImprimir}" />
+				</p:column>
+
+				<p:column headerText="Criar" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagCriar}" />
+				</p:column>
+
+				<p:column headerText="Copiar" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagCopiar}" />
+				</p:column>
+
+				<p:column headerText="Pular Tab" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagPularTab}" />
+				</p:column>
+
+				<p:column headerText="Impressão Automática" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagImpressaoAutomatica}" />
+				</p:column>
+
+				<p:column headerText="Editar Retroativo" rendered="#{sessionScope.usuarioLogado.flagAdministrador}" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagEditarRetroativo}" />
+				</p:column>
+
+				<p:column headerText="Atend. Fechado" styleClass="coluna05">
+					<p:selectBooleanCheckbox value="#{tab.flagPermissaoMovimentacaoFechada}" />
+				</p:column>
+
+				<p:column headerText="Ordem" styleClass="coluna05">
+					<p:inputNumber value="#{tab.ordem}" decimalPlaces="0" disabled="#{!sessionScope.usuarioLogado.flagAdministrador}" maxlength="2" styleClass="autoComplete80" />
+				</p:column>
+
+				<p:column headerText="" styleClass="coluna03">
+					<p:commandLink update=":tabview:frmTabCadastro:panelValidacao" oncomplete="PF('dlgValidacao').show();" styleClass="#{empty tab.validacao ? '' : 'amareloIMG'}">
+						<h:graphicImage value="../resources/images/doc.png" style="border: 0px" />
+						<f:setPropertyActionListener target="#{templateFaces.templateTabSelecionada}" value="#{tab}" />
+					</p:commandLink>
+				</p:column>
+
+				<p:column headerText="" styleClass="coluna03">
+					<p:commandLink action="#{mbean.removeTab}" title="Clique aqui para remover a tab" process="@this :tabview:frmTabCadastro" update=":tabview:frmTabCadastro:dtTabs">
+						<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+						<f:setPropertyActionListener target="#{templateFaces.templateTabSelecionada}" value="#{tab}" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:fieldset>
+
+		<p:dialog modal="true" resizable="false" closeOnEscape="true" widgetVar="dlgValidacao" header="Query para validação" styleClass="dialog80">
+
+			<h:panelGroup id="panelValidacao">
+
+				<p:scrollPanel id="spPanelValidacao" mode="native" style="background: none; padding: 5px; margin: 5px; overflow: auto;">
+
+					<h:panelGrid columns="1" style="width: 100%" id="pgEsquerdo">
+						<p:inputTextarea id="txtValidacao" value="#{templateFaces.templateTabSelecionada.validacao}" autoResize="false" rows="10" styleClass="coluna98" />
+						<h:outputText value="Aviso de retorno: INFO, AVISO, ERRO, BLOQUEIO !#.#! Ex: 'INFO!#.#!Operação realizada com sucesso!'" />
+					</h:panelGrid>
+
+					<script type="text/javascript">
+					$(document).ready(function() {
+						$("div[id*=spPanelValidacao]").height($(window).height() * 0.8 - 120);
+						$("textarea[id*=txtValidacao]").height($(window).height() * 0.8 - 160);
+					});
+				</script>
+
+				</p:scrollPanel>
+
+				<p:panel style="margin: 5px;">
+					<p:commandButton value="OK" icon="salvar" process="@this, panelValidacao" update="dtTabs" oncomplete="PF('dlgValidacao').hide();" />
+					<p:commandButton type="button" value="Fechar" icon="ui-icon-close" onclick="PF('dlgValidacao').hide();" />
+				</p:panel>
+
+			</h:panelGroup>
+
+		</p:dialog>
+
+	</ui:define>
+	
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_template.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid width="100%" styleClass="coluna50">
+
+			<p:outputLabel for="funcaoPesquisa" value="Função" />
+			<p:selectOneMenu id="funcaoPesquisa" value="#{mbeanPesquisaModel.funcaoModel.id}" styleClass="coluna50">
+				<f:selectItem itemLabel="Selecione" itemValue="" />
+				<f:selectItems value="#{mbean.comboFuncoes}" />
+			</p:selectOneMenu>
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Função" styleClass="coluna95">
+			<h:outputText value="#{linha.funcaoModel.descricao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

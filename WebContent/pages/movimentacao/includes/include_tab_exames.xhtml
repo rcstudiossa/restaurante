@@ -1,0 +1,219 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="#{solicitacaoExameFuncionarioFaces}" />
+	<ui:param name="mbeanModel" value="${solicitacaoExameFuncionarioFaces.crudModel}" />
+
+	<ui:decorate template="/pages/includes/decorate_atendimento.xhtml">
+
+		<ui:param name="titlePai" value="pgSolicitacaoExamePai" />
+		<ui:param name="titleFilho1" value="spSolicitacaoExameFilho1" />
+		<ui:param name="titleFilho2" value="spSolicitacaoExameFilho2" />
+		<ui:param name="titleBtn" value="pnSolicitacaoExameBtn" />
+
+		<ui:define name="botoesScrollSuperior">
+
+			<h:panelGrid id="pgBtnSuperiorSolicitacaoExame" rendered="#{tab.flagCriar}" columns="2" columnClasses="coluna50, coluna50" styleClass="botoesCriacao" style="width: 100%">
+
+				<p:commandButton id="btnNovaSolicitacaoExame" value="Criar" icon="ui-icon-document" action="#{mbean.criar}" process="@this, spSolicitacaoExameFilho1" update="pgBtnSuperiorSolicitacaoExame spSolicitacaoExameFilho1 spSolicitacaoExameFilho2 pnSolicitacaoExameBtn" disabled="#{tab.flagBloqueado || !tab.flagInserir || (!empty mbean.grid and empty mbean.grid[0].id) || !tab.flagCriar || (sessionScope.atendimentoSessao.statusAtendimentoModel.flagFechado and !tab.flagPermissaoMovimentacaoFechada)}" style="width: 83px;" />
+				<p:commandButton id="btnCopiarSolicitacaoExame" value="Copiar" icon="ui-icon-copy" action="#{mbean.copiar}" disabled="#{tab.flagBloqueado || !tab.flagInserir || mbeanModel.id == null || !tab.flagCopiar || (sessionScope.atendimentoSessao.statusAtendimentoModel.flagFechado and !tab.flagPermissaoMovimentacaoFechada)}" process="@this, spSolicitacaoExameFilho1" update="pgBtnSuperiorSolicitacaoExame spSolicitacaoExameFilho1 spSolicitacaoExameFilho2 pnSolicitacaoExameBtn" style="width: 83px;" />
+
+			</h:panelGrid>
+
+		</ui:define>
+
+		<ui:define name="scroll">
+
+			<p:dataGrid id="dgSolicitacaoExames" var="linha" value="#{mbean.grid}" emptyMessage="Nenhum registro encontrado" columns="1" style="width:100%;">
+
+				<p:panel id="pnSolicitacaoExame" styleClass="#{linha.id == mbeanModel.id ? 'laranja' : ''} boxPaciente">
+
+					<f:facet name="header">
+						<h:outputText rendered="#{!empty linha.id}" value="#{linha.dataCadastro}">
+							<ui:include src="/pages/includes/include_gmt_format.xhtml" />
+						</h:outputText>
+						<h:outputText value="EM PREENCHIMENTO" rendered="#{empty linha.id}" />
+						<p:commandLink title="Remover solicitaÃ§Ã£o" styleClass="ui-icon cancelar16 linkMovimentacao IconePanel" action="#{mbean.excluirSolicitacaoExame(linha)}" process="@this" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spSolicitacaoExameFilho2 :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgBtnSuperiorSolicitacaoExame :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:dgSolicitacaoExames" rendered="#{empty linha.id and tab.flagCriar}" />
+					</f:facet>
+
+					<p:commandLink action="#{mbean.carregar}" process="@this :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spSolicitacaoExameFilho2" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:dgSolicitacaoExames :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spSolicitacaoExameFilho2">
+						<h:panelGrid columns="1">
+							<h:outputText value="NÃºmero: #{linha.id}" />
+							<h:outputText value="Atendimento #{linha.atendimentoModel.id}" />
+							<h:outputText value="#{linha.descricaoProcedimento}" />
+							<h:outputText value="#{linha.flagConcluido ? 'CONCLUÃ�DO' : 'ABERTO'}" styleClass="#{linha.flagConcluido ? 'estiloVerde' : 'estiloAzul'}"/>
+							<h:outputText value="Solicitante: #{linha.solicitanteModel.nome}" />
+						</h:panelGrid>
+						<f:setPropertyActionListener target="#{solicitacaoExameFuncionarioFaces.crudModel}" value="#{linha}" />
+					</p:commandLink>
+
+				</p:panel>
+
+			</p:dataGrid>
+
+		</ui:define>
+
+		<ui:define name="detalhe">
+			
+			<style>
+				.campoDigitacao input{
+					min-width: 50px; text-align: right; opacity: 1 !important; font-size: 14px
+				}
+			</style>
+			
+			<h:panelGroup id="pgDados" rendered="#{!empty mbean.grid}">
+
+				<p:panel style="margin: 5px" rendered="#{mbeanModel.solicitanteModel.id == sessionScope.usuarioLogado.id and !mbeanModel.flagConcluido}">
+					
+					<h:panelGrid style="margin-left: -3px; width: 100%">
+						
+						<p:outputLabel for="cid" value="CID" />
+						<p:selectOneMenu id="cid" value="#{mbeanModel.cidModel.id}" style="width: 100%">
+							<f:selectItem itemValue="" itemLabel="NÃ£o selecionado" />
+							<f:selectItems value="#{mbean.comboCid}" />
+						</p:selectOneMenu>
+						
+					</h:panelGrid>
+					
+				</p:panel>
+
+				<p:panel style="margin: 5px">
+				
+					<p:focus for="acExame" rendered="#{mbeanModel.solicitanteModel.id == sessionScope.usuarioLogado.id and !mbeanModel.flagConcluido}"/>
+					
+					<h:panelGrid columns="2" columnClasses="coluna70, coluna30" style="margin-left: -3px; width: 100%" rendered="#{mbeanModel.solicitanteModel.id == sessionScope.usuarioLogado.id and !mbeanModel.flagConcluido}">
+
+						<p:outputLabel for="acExame" value="Exame / Procedimento" />
+						<h:panelGroup />
+
+						<p:autoComplete id="acExame" value="#{mbean.procedimentoModel}" var="proc" queryDelay="300" forceSelection="true" completeMethod="#{mbean.buscaExame}" itemLabel="#{proc.descricao}" autocomplete="true" itemValue="#{proc}" converter="#{procedimentoComPerfilConverter}" minQueryLength="2" scrollHeight="200" onkeypress="return clickClassEnter(event, 'btnAddProcedimento')" label="Procedimento" styleClass="autoComplete98">
+							<p:ajax event="query" global="false" />
+						</p:autoComplete>
+
+						<p:commandButton id="btnAddProcedimento" action="#{mbean.addProcedimento}" value="Adicionar" icon="ui-icon-plus" process="@this pgDados" update="pgDados" styleClass="btnAddProcedimento" />
+
+					</h:panelGrid>
+
+					<p:treeTable id="gridProcedimentoResultado" value="#{solicitacaoExameFuncionarioFaces.arvoreResultados}" var="resultado" widgetVar="index" emptyMessage="Nenhum exame adicionado" rowStyleClass="linhaResultado" style="width: 100%; margin-top: 5px">
+
+						<p:column styleClass="coluna80, nomeExame" headerText="Exame">
+							<h:outputText value="#{resultado}" rendered="#{resultado.class == 'class java.lang.String'}" />
+							<h:outputText value="#{resultado.descricao}" rendered="#{resultado.class == 'class br.com.restaurante.model.PerfilModel'}" />
+							<h:outputText value="#{resultado.procedimentoModel.descricao}" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemModel'}" />
+							<h:outputText value="#{resultado.descricao}" rendered="#{resultado.class == 'class br.com.restaurante.model.QuizGrupoModel'}" />
+							<h:outputText value="#{resultado.quizPerguntaModel.nomePergunta}" escape="false" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemResultadoModel'}" />
+						</p:column>
+
+						<p:column id="colPercentual" styleClass="coluna05" headerText="Data de RealizaÃ§Ã£o / %">
+							
+							<ts:calendar pattern="dd/MM/yyyy" value="#{resultado.dataRealizacao}" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemModel'}" />
+							<h:panelGroup rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemResultadoModel'}">
+								<p:inputText id="campoPercentual_input" value="#{resultado.percentual}" rendered="#{!empty resultado.filhos}" style="display:none" />
+								<p:inputNumber id="campoPercentual" value="#{resultado.percentual}" onkeydown="return movimentarFocus(event, this, ['campoPercentual', 'campoResultado'])" symbol=" %" symbolPosition="suffix" disabled="#{mbeanModel.flagConcluido}" rendered="#{resultado.quizPerguntaModel.flagPercentual}" styleClass="campoDigitacao">
+									<p:ajax global="false" listener="#{solicitacaoExameFuncionarioFaces.calcularValorExame(resultado)}" process="@this, :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" />
+								</p:inputNumber>
+							</h:panelGroup>
+
+						</p:column>
+
+						<p:column styleClass="coluna10" headerText="Resultado">
+
+							<h:panelGroup layout="block" style="width: 150px" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemResultadoModel'}">
+
+								<p:inputNumber id="campoResultadoPontoFlutuante" onkeydown="return movimentarFocus(event, this, #{resultado.idsArrayPrioridade})" value="#{resultado.doubleEscolhido}" symbol=" #{resultado.quizPerguntaModel.unidadeMedidaModel.descricao}" decimalSeparator="," thousandSeparator="." symbolPosition="suffix" minValue="-9999" disabled="#{!empty resultado.quizPerguntaModel.formula || mbeanModel.flagConcluido}" rendered="#{resultado.quizPerguntaModel.pontoFlutuante}" styleClass="coluna100Input campoDigitacao">
+									<p:ajax global="false" listener="#{solicitacaoExameFuncionarioFaces.processarCampoResultado(resultado)}" process="@this, :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" />
+								</p:inputNumber>
+								<h:selectOneMenu id="campoResultadoCombo_input" value="#{resultado.respostaEscolhida}" onkeydown="return movimentarFocus(event, this, ['campoResultado', 'campoPercentual'])" disabled="#{mbeanModel.flagConcluido}" rendered="#{resultado.quizPerguntaModel.combo}" styleClass="comboExame">
+									<f:selectItem itemLabel="NÃ£o Selecionado" itemValue="" />
+									<f:selectItems var="resposta" value="#{resultado.quizPerguntaModel.respostas}" itemLabel="#{resposta.resposta}" itemValue="#{resposta.resposta}" />
+								</h:selectOneMenu>
+								<h:panelGrid columns="2" columnClasses="coluna90, coluna10" style="width: 100%" rendered="#{resultado.quizPerguntaModel.inputTexto}" styleClass="gridBodyNoPadding gridNoBorder">
+									<h:panelGroup id="pgTexto">
+										<p:inputText id="campoResultadoTexto_input" value="#{resultado.respostaEscolhida}" onkeydown="return movimentarFocus(event, this, ['campoResultado', 'campoPercentual'])" disabled="#{mbeanModel.flagConcluido}" rendered="#{resultado.quizPerguntaModel.inputTexto}" styleClass="coluna90" />
+									</h:panelGroup>
+									<p:commandLink id="btnShowTexto" title="Clique para expandir o campo" process="@this :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgTexto" oncomplete="PF('dlgRespostaTexto').show()" global="false" styleClass="btnShowTexto#{resultado.quizPerguntaModel.id}" style="margin-left: 2px">
+										<h:graphicImage value="../resources/images/doc.png" style="border: 0px" />
+										<f:setPropertyActionListener value="#{resultado}" target="#{solicitacaoExameFuncionarioFaces.resultadoSelecionado}" />
+									</p:commandLink>
+								</h:panelGrid>
+								<h:panelGrid columns="2" columnClasses="coluna90, coluna10" style="width: 100%" rendered="#{resultado.quizPerguntaModel.multiploPanel}" styleClass="gridBodyNoPadding gridNoBorder">
+									<h:panelGroup id="pgObsMultiplo">
+										<p:inputText id="campoResultadoMultiplo_input" value="#{resultado.respostaEscolhida}" onkeydown="return movimentarFocus(event, this, ['campoResultado', 'campoPercentual'])" disabled="#{mbeanModel.flagConcluido}" rendered="#{empty resultado.respostasEscolhidas}" styleClass="coluna90"/>
+										<p:dataList value="#{resultado.respostasEscolhidas}" var="resposta" type="ordered" styleClass="dataListNoPadding dataListNoMargin" rendered="#{!empty resultado.respostasEscolhidas}">
+											<h:outputText value="#{resposta}" />
+										</p:dataList>
+									</h:panelGroup>
+									<p:commandLink id="btnShowMultiploPanel" title="Clique para visualizar as opÃ§Ãµes" process="@this :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgRespostaMultipla" oncomplete="PF('dlgRespostaMultipla').show()" global="false" styleClass="btnShowMultiploPanel#{resultado.quizPerguntaModel.id}" disabled="#{mbeanModel.flagConcluido}" style="margin-left: 2px">
+										<h:graphicImage value="../resources/images/doc.png" style="border: 0px" />
+										<f:setPropertyActionListener value="#{resultado}" target="#{solicitacaoExameFuncionarioFaces.resultadoSelecionado}" />
+									</p:commandLink>
+								</h:panelGrid>
+
+							</h:panelGroup>
+
+						</p:column>
+
+						<p:column styleClass="coluna2" headerText="Normal">
+							<div align="center">
+								<p:selectBooleanCheckbox value="#{resultado.flagResultadoNormal}" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemModel'}">
+									<p:ajax listener="#{solicitacaoExameFuncionarioFaces.marcarResultadoNormal(resultado)}" process="@this, :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" />
+								</p:selectBooleanCheckbox>
+							</div>
+						</p:column>
+
+						<p:column styleClass="coluna2" headerText="Alterado">
+							<div align="center">
+								<p:selectBooleanCheckbox value="#{resultado.flagResultadoAlterado}" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemModel'}">
+									<p:ajax listener="#{solicitacaoExameFuncionarioFaces.marcarResultadoAlterado(resultado)}" process="@this, :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" />
+								</p:selectBooleanCheckbox>
+							</div>
+						</p:column>
+						
+						<p:column styleClass="coluna2" headerText="GrÃ¡fico">
+							<div align="center">
+								<p:commandLink title="Visualizar grÃ¡fico de exames" action="#{graficoExameFaces.visualizarGrafico}" process="@this" update=":formGraficoExame:tabviewGrafico" oncomplete="PF('dlgGraficoExame').show()" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemResultadoModel' and resultado.quizPerguntaModel.tipoRespostaModel.id == 10}">
+									<h:graphicImage value="../resources/images/line.png" height="20" width="20" style="border: 0px" />
+									<f:setPropertyActionListener value="#{resultado.quizPerguntaModel}" target="#{graficoExameFaces.exameModel}" />
+								</p:commandLink>
+							</div>
+						</p:column>
+
+						<p:column styleClass="coluna2" headerText="Selec." rendered="#{false and !mbeanModel.flagConcluido}">
+							<div align="center">
+								<p:selectBooleanCheckbox value="#{resultado.flagSelecionado}" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemModel'}" />
+							</div>
+						</p:column>
+						
+						<p:column headerText="Excluir" styleClass="coluna2">
+							<div align="center">
+								<p:commandLink title="Cancelar solicitaÃ§Ã£o do exame" action="#{mbean.removerProcedimento(resultado)}" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgDados" process="@this, :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgDados" rendered="#{resultado.class == 'class br.com.restaurante.model.SolicitacaoExameItemModel' and !mbeanModel.flagConcluido}">
+									<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								</p:commandLink>
+							</div>
+						</p:column>
+
+					</p:treeTable>
+
+				</p:panel>
+
+			</h:panelGroup>
+			
+			<ui:include src="/pages/quiz/include_dialog_resposta_multipla.xhtml" />
+			<ui:include src="/pages/quiz/include_dialog_resposta_texto.xhtml" />
+			<ui:include src="/pages/movimentacao/includes/include_script_laboratorio.xhtml" />
+
+		</ui:define>
+		
+		<ui:param name="flagEsconderRodape" value="#{mbeanModel.solicitanteModel.id != sessionScope.usuarioLogado.id || mbeanModel.flagConcluido}" />
+
+		<ui:define name="botoes">
+
+			<p:commandButton id="btnGravarSolicitacaoExame" value="Gravar" icon="salvar" action="#{mbean.salvarSolicitacao}" process="@this pgSolicitacaoExamePai" update="pgBtnSuperiorSolicitacaoExame dgSolicitacaoExames pnSolicitacaoExameBtn pgDados pnSolicitacaoExameBtn" disabled="#{tab.flagBloqueado}" rendered="#{!empty mbean.grid and mbeanModel.solicitanteModel.id == sessionScope.usuarioLogado.id and !mbeanModel.flagConcluido and (!mbeanModel.atendimentoModel.statusAtendimentoModel.flagFechado || tab.flagPermissaoMovimentacaoFechada)}" styleClass="btnPanelMedico" />
+			<p:commandButton id="btnConcluirSolicitacaoExame" value="Concluir" icon="travar" action="#{mbean.concluir}" process="@this pgSolicitacaoExamePai" update="pgBtnSuperiorSolicitacaoExame dgSolicitacaoExames pnSolicitacaoExameBtn pgDados pnSolicitacaoExameBtn" disabled="#{tab.flagBloqueado}" rendered="#{!empty mbean.grid and mbeanModel.solicitanteModel.id == sessionScope.usuarioLogado.id and !mbeanModel.flagConcluido and (!mbeanModel.atendimentoModel.statusAtendimentoModel.flagFechado || tab.flagPermissaoMovimentacaoFechada)}" styleClass="btnPanelMedico" />
+			<p:commandButton id="btnImprimirSolicitacaoExame" value="Imprimir" icon="imprimir" disabled="#{!tab.flagImprimir || empty mbeanModel.id}" action="#{mbean.imprimirSolicitacao}" oncomplete="imprimirPdf(args.arquivoImpressao)" styleClass="btnPanelMedico" />
+
+		</ui:define>
+
+	</ui:decorate>
+
+</ui:composition>

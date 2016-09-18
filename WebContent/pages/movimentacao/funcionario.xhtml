@@ -1,0 +1,89 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${funcionarioFaces}" />
+	<ui:param name="mbeanModel" value="${funcionarioFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${funcionarioFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="${true}" />
+
+	<ui:define name="cadastro"> 
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_funcionario.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+		</p:fieldset>
+		
+	</ui:define>
+
+	<ui:define name="comandosCrudFim">
+		
+		<ui:include src="includes/include_historico_funcionario.xhtml" />
+		
+	</ui:define>
+
+	<ui:define name="cadastroSemForm">
+		<ui:include src="includes/include_importacao_funcionario.xhtml" />
+	</ui:define>
+	
+	<ui:define name="tabs">
+
+		<ui:include src="includes/include_tab_atendimentos.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+		
+		<h:panelGrid columns="2" columnClasses="coluna10, coluna90" style="width: 100%; margin-left: -3px">
+			
+			<h:outputText value="Matrícula" />
+			<h:outputText value="Nome" />
+			
+			<p:inputText value="#{mbeanPesquisaModel.matricula}" styleClass="coluna95" />
+			<p:inputText value="#{mbeanPesquisaModel.nome}" styleClass="coluna50" />
+			
+		</h:panelGrid>
+		
+		<h:panelGrid columns="2" columnClasses="coluna25, coluna75" style="width: 100%; margin-left: -3px">
+		
+			<h:outputText value="Lotação" />
+			<h:outputText value="Atividade" />
+			
+			<p:selectOneMenu value="#{mbeanPesquisaModel.origemModel.id}" styleClass="coluna95">
+				<f:selectItem itemValue="" itemLabel="Não selecionado" />
+				<f:selectItems value="#{mbean.comboOrigem}" />
+			</p:selectOneMenu>
+			<p:selectOneMenu value="#{mbeanPesquisaModel.atividadeModel.id}" styleClass="coluna60">
+				<f:selectItem itemValue="" itemLabel="Não selecionado" />
+				<f:selectItems value="#{mbean.comboAtividade}" />
+			</p:selectOneMenu>
+		
+		</h:panelGrid>
+
+		<p:outputLabel for="flagAtivo" value="Ativo?" />
+		<p:selectBooleanCheckbox id="flagAtivo" value="#{mbeanPesquisaModel.flagAtivo}" />
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Matrícula" styleClass="coluna10">
+			<h:outputText value="#{linha.matricula}" />
+		</p:column>
+
+		<p:column headerText="Nome" styleClass="coluna35">
+			<h:outputText value="#{linha.nome}" />
+		</p:column>
+
+		<p:column headerText="CPF" styleClass="coluna10">
+			<h:outputText value="#{linha.cpf}" />
+		</p:column>
+
+		<p:column headerText="Cargo" styleClass="coluna25">
+			<h:outputText value="#{linha.cargoModel.descricao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

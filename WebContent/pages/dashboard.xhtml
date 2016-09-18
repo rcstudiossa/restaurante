@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<f:view xmlns:f="http://java.sun.com/jsf/core" contentType="text/html" encoding='UTF-8'>
+
+	<h:head>
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="pragma" content="no-cache" />
+		<meta http-equiv="expires" content="-1" />
+		<title>Sistema Básico</title>
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/geral.css" />
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/font-awesome.css" />
+		<link rel="shortcut icon" href="#{request.contextPath}/resources/images/favicon.ico" type="image/x-icon" />
+		<script src="#{request.contextPath}/resources/js/funcoes.js" type="text/javascript" />
+		<script src="#{request.contextPath}/resources/js/jquery.plugin.js" type="text/javascript" />
+		<script src="#{request.contextPath}/resources/js/jquery.countdown.js" type="text/javascript" />
+	</h:head>
+
+	<h:body id="bodyDashBoard" style="font-size: 11px">
+
+		<script type="text/javascript">
+				function imprimirPdf(arquivo) {
+					try{
+						
+						ifrm = document.getElementById('frmImpressao2');
+						ifrm.setAttribute('src', window.location.protocol + '//' + window.location.host + '/arquivos/arquivos_sistema_basico/relatorios/' + arquivo);
+						PF('dlgImpressao').show();
+						ifrm.onload = function() {
+							setTimeout(function() {	ifrm.focus(); ifrm.contentWindow.print(); $("button[id*=btnFecharDialogImpressao]").focus()}, 1000);
+						}
+
+					}catch(e){
+						console.log(e);
+					}
+					
+					return false;
+				}
+				PrimeFaces.locales['pt_BR'] = {
+						closeText: 'Fechar',
+			            prevText: 'Anterior',
+			            nextText: 'Próximo',
+			            currentText: 'Começo',
+			            monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+			            monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun', 'Jul','Ago','Set','Out','Nov','Des'],
+			            dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+			            dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],
+			            dayNamesMin: ['D','S','T','Q','Q','S','S'],
+			            weekHeader: 'Semana',
+			            firstDay: 1,
+			            isRTL: false,
+			            showMonthAfterYear: false,
+			            yearSuffix: '',
+			            timeOnlyTitle: 'Só Horas',
+			            timeText: 'Tempo',
+			            hourText: 'Hora',
+			            minuteText: 'Minuto',
+			            secondText: 'Segundo',
+			            currentText: 'Data Atual',
+			            ampm: false,
+			            month: 'Mês',
+			            week: 'Semana',
+			            day: 'Dia',
+			            allDayText : 'Todo Dia'
+				};
+			</script>
+
+		<h:form id="formImpressao">
+
+			<p:dialog id="dlgImpressaoID" modal="true" resizable="false" closeOnEscape="true" widgetVar="dlgImpressao" header="Imprimir arquivo" styleClass="dialog90">
+
+				<h:panelGroup id="pgImpressao">
+
+					<iframe id="frmImpressao2" name="frmImpressao2" style="width: 99.5%; height: calc(100vh - 165px)" />
+
+					<p:panel style="margin-top: 5px;">
+						<p:commandButton id="btnFecharDialogImpressao" type="button" value="Fechar" icon="ui-icon-close" onclick="PF('dlgImpressao').hide();" />
+					</p:panel>
+
+				</h:panelGroup>
+
+			</p:dialog>
+
+		</h:form>
+
+		<div id="divDashBoard" style="height: calc(100vh - 33px)">
+
+			<h:panelGroup id="luMenu" layout="block" styleClass="fundo corner esquerda">
+
+				<h:form id="formMenu">
+
+					<div align="center">
+
+						<p:commandButton id="HFButton" icon="sistema48" type="button" style="margin-top:5px; width: 64px; height:64px; margin-bottom: -5px;" />
+
+						<h:outputText value="____________" style="color:lightgray; margin-top: 5px;" />
+
+						<div id="divBotoes" style="height: calc(100vh - 193px); overflow: auto">
+
+							<ui:include src="/pages/includes/atalho_recursive.xhtml">
+								<ui:param name="menus" value="#{menuFaces.menus}" />
+							</ui:include>
+
+						</div>
+
+						<h:outputText value="____________" style="color:lightgray" />
+
+						<p:commandButton id="btnDesconectar" global="false" icon="logout48" action="#{menuFaces.logout}" style="margin-top:5px; width: 64px; height:64px" />
+						<p:tooltip for="btnDesconectar" value="Desconectar o usuário #{sessionScope.usuarioLogado.nome} do sistema." />
+
+						<ui:include src="/pages/includes/menu_novo.xhtml" />
+
+					</div>
+
+				</h:form>
+
+			</h:panelGroup>
+
+			<h:panelGroup id="areaTrabalho" layout="block" styleClass="fundo corner direita">
+
+				<div id="titlePage" class="titlePanel corner">
+
+					<h:outputText value="#{menuFaces.nomeTela}" />
+
+				</div>
+
+				<h:panelGroup id="opfuncionario_ativo">
+					<ui:include src="/pages/includes/funcionario_ativo.xhtml" />
+				</h:panelGroup>
+
+				<div id="scrAreaTrabalho" style="#{menuFaces.menuModel.flagDependeFuncionario or (!empty sessionScope.funcionarioSessao.id and menuFaces.telaFuncionario) ? 'height: calc(100vh - 126px)' : 'height: calc(100vh - 61px)'}; overflow-x: auto; overflow-y: auto">
+					<ui:include id="uiTela" src="#{menuFaces.tela}" />
+				</div>
+			</h:panelGroup>
+
+			<h:form id="formNotificacao" prependId="false">
+
+				<p:confirmDialog widgetVar="dlgExpiracaoLogin" header="Aviso" severity="alert">
+					<f:facet name="message">
+						<p:outputPanel autoUpdate="true">
+							<script type="text/javascript">
+						$(document).ready(function() {
+							resetarCronometro();
+						});
+					</script>
+							<table>
+								<tr>
+									<td><h:outputText value="Sua sessão irá expirar em " styleClass="menuPrincipal" /></td>
+									<td><h:outputText id="horarioAvisoUsuario" value="" styleClass="menuPrincipal" /></td>
+									<td><h:outputText value=" minutos, deseja efetuar a renovação?" styleClass="menuPrincipal" /></td>
+								</tr>
+							</table>
+						</p:outputPanel>
+					</f:facet>
+					<p:commandButton id="btnExpiracaoLogin" value="Sim" oncomplete="PF('dlgExpiracaoLogin').hide()" global="false" />
+					<p:commandButton type="button" value="Não" onclick="PF('dlgExpiracaoLogin').hide()" />
+				</p:confirmDialog>
+
+				<p:remoteCommand name="deslogar" action="#{menuFaces.logoutSessaoExpirada}" oncomplete="document.formNotificacao.submit();" />
+
+			</h:form>
+
+		</div>
+
+		<h:panelGroup id="pgInformativo" layout="block" styleClass="fundo inferior corner">
+
+			<h:panelGrid columns="6" width="100%" style="height: 100%;" columnClasses="colunaInformativo1, colunaInformativo4, colunaInformativo4, colunaInformativo2, colunaInformativoAjax, colunaInformativo5">
+				<h:column>
+					<p:outputPanel rendered="#{empty sessionScope.funcionarioSessao}">
+						<ui:include src="/pages/includes/sobre.xhtml" />
+					</p:outputPanel>
+					<h:outputText value="Funcionário Selecionado - #{sessionScope.funcionarioSessao.matricula}: #{sessionScope.funcionarioSessao.nome}" rendered="#{!empty sessionScope.funcionarioSessao}" />
+				</h:column>
+				<h:column>
+					<h:outputLabel value="#{sessionScope.usuarioLogado.nome}" />
+				</h:column>
+				<h:column>
+					<h:outputLabel value="#{sessionScope.usuarioLogado.funcaoLogada.descricao}" />
+				</h:column>
+				<h:column>
+					<h:outputLabel value="#{sessionScope.origemAtual.descricao}" />
+				</h:column>
+				<h:column>
+					<div align="center">
+						<p:outputPanel autoUpdate="true">
+							<h:outputText id="horario" value="" />
+							<h:outputText id="horarioAviso" style="display: none" />
+							<script type="text/javascript">
+								$(document).ready(function() {
+									resetarCronometro();
+								});
+								function resetarCronometro(){
+									var newYear = new Date();
+									newYear.setMinutes(newYear.getMinutes() + #{menuFaces.minutosInatividadeSessao});
+									$('#horario').countdown({until: newYear, compact: true, format: 'MS', onExpiry: deslogar});
+									$('#horarioAvisoUsuario').countdown({until: newYear, compact: true, format: 'MS'});
+									newYear.setMinutes(newYear.getMinutes() - 1);
+									$('#horarioAviso').countdown({until: newYear, compact: true, format: 'MS', onExpiry: abrirDialogAvisoExpiracao});
+								}
+								function abrirDialogAvisoExpiracao(){
+									PF('dlgExpiracaoLogin').show();
+								}
+							</script>
+						</p:outputPanel>
+					</div>
+				</h:column>
+			</h:panelGrid>
+
+		</h:panelGroup>
+
+		<p:growl id="msgCadastro" globalOnly="false" showDetail="true" showSummary="false" autoUpdate="true" escape="false" />
+
+		<p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+
+		<p:dialog modal="true" widgetVar="statusDialog" header="Processando solicitação..." draggable="false" closable="false" resizable="false" width="235">
+			<p:graphicImage value="../resources/images/ajax-loader.gif" style="border: 0px;width:200px;height:25px" />
+		</p:dialog>
+
+	</h:body>
+
+</f:view>
+
+</html>

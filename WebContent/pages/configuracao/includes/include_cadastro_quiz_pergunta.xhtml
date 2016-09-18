@@ -1,0 +1,173 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid columns="2" columnClasses="coluna50_2, coluna50_2" style="width:100%">
+
+		<h:panelGroup>
+
+			<h:panelGrid columns="2" style="width:100%">
+
+				<p:outputLabel for="pergunta" value="Pergunta" />
+				<p:outputLabel for="apelido" value="Apelido" />
+
+				<p:inputText id="pergunta" value="#{mbeanPerguntaModel.pergunta}" maxlength="200" required="true" styleClass="coluna95" />
+				<p:inputText id="apelido" value="#{mbeanPerguntaModel.apelido}" maxlength="200" styleClass="coluna95" />
+
+			</h:panelGrid>
+
+			<h:panelGrid id="pgTipoResposta" columns="2" columnClasses="coluna50, coluna50" style="width:100%">
+
+				<h:outputLabel value="Medida" />
+				<p:outputLabel for="somTipoResposta" value="Tipo de Resposta" />
+
+				<p:selectOneMenu value="#{mbeanPerguntaModel.medidaModel.id}" styleClass="coluna95">
+					<f:selectItem itemLabel="Selecione" itemValue="" />
+					<f:selectItems value="#{mbeanPergunta.comboMedidas}" />
+				</p:selectOneMenu>
+				<p:selectOneMenu id="somTipoResposta" value="#{mbeanPerguntaModel.tipoRespostaModel.id}" required="true" label="Tipo de Resposta" styleClass="coluna95">
+					<f:selectItem itemLabel="Selecione" itemValue="" />
+					<f:selectItems value="#{mbeanPergunta.comboTipoResposta}" />
+					<p:ajax event="change" process="@this" update="pgExtras, pgRespostas" global="false" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid id="pgExtras" style="width: 100%">
+
+				<h:outputLabel value="Fórmula" rendered="#{mbeanPerguntaModel.pontoFlutuante || mbeanPerguntaModel.consequencia}" />
+				<p:inputText id="formula" value="#{mbeanPerguntaModel.formula}" styleClass="coluna98" rendered="#{mbeanPerguntaModel.pontoFlutuante || mbeanPerguntaModel.consequencia}" />
+
+				<h:outputText value="Maxlength" rendered="#{mbeanPerguntaModel.input || mbeanPerguntaModel.listaInputText || mbeanPerguntaModel.listaInputTextArea || mbeanPerguntaModel.keyFilter}" />
+				<p:inputText value="#{mbeanPerguntaModel.maxlenght}" maxlength="5" rendered="#{mbeanPerguntaModel.input || mbeanPerguntaModel.listaInputText || mbeanPerguntaModel.listaInputTextArea || mbeanPerguntaModel.keyFilter}" />
+
+				<h:outputText value="Rows" rendered="#{mbeanPerguntaModel.texto || mbeanPerguntaModel.informativa || mbeanPerguntaModel.listaInputTextArea}" />
+				<p:inputNumber value="#{mbeanPerguntaModel.rows}" maxlength="2" decimalPlaces="0" rendered="#{mbeanPerguntaModel.texto || mbeanPerguntaModel.informativa || mbeanPerguntaModel.listaInputTextArea}" />
+
+				<h:outputText value="Casas Decimais" rendered="#{mbeanPerguntaModel.pontoFlutuante}" />
+				<p:inputNumber value="#{mbeanPerguntaModel.rows}" maxlength="2" decimalPlaces="0" rendered="#{mbeanPerguntaModel.pontoFlutuante}" />
+
+				<h:outputText value="Pattern" rendered="#{mbeanPerguntaModel.data || mbeanPerguntaModel.hora || mbeanPerguntaModel.inputMask || mbeanPerguntaModel.keyFilter || mbeanPerguntaModel.jqueryMask}" />
+				<p:inputText value="#{mbeanPerguntaModel.pattern}" maxlength="100" rendered="#{mbeanPerguntaModel.data || mbeanPerguntaModel.hora || mbeanPerguntaModel.inputMask || mbeanPerguntaModel.keyFilter || mbeanPerguntaModel.jqueryMask}" />
+				
+				<h:outputLabel for="consultaSQL" value="Consulta SQL - Colunas [Id, Resposta, Id Pergunta, flagPadrão, pontos, formulaConsequencia]" rendered="#{mbeanPerguntaModel.comboSQL}" />
+				<p:inputTextarea rows="10" id="consultaSQL" value="#{mbeanPerguntaModel.consultaComboSQL}" styleClass="coluna98" rendered="#{mbeanPerguntaModel.comboSQL}" />
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="3" columnClasses="coluna15, coluna15, coluna70" style="width: 100%">
+
+				<h:outputLabel value="Ativo?" />
+				<h:outputLabel value="Arquétipo?" />
+				<h:outputLabel value="Habilitar campo outros?" />
+
+				<p:selectBooleanCheckbox value="#{mbeanPerguntaModel.flagAtivo}" />
+				<p:selectBooleanCheckbox value="#{mbeanPerguntaModel.flagArquetipo}" />
+				<p:selectBooleanCheckbox value="#{mbeanPerguntaModel.flagOutros}" />
+
+			</h:panelGrid>
+
+		</h:panelGroup>
+
+		<h:panelGroup>
+
+			<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 100%">
+
+				<h:outputText value="Arquétipo" />
+				<h:outputText value="" />
+
+				<p:selectOneMenu value="#{mbeanPergunta.quizPerguntaModel.id}" styleClass="coluna98">
+					<f:selectItem itemLabel="Selecione" itemValue="" />
+					<f:selectItems value="#{mbeanPergunta.comboArquetipos}" />
+				</p:selectOneMenu>
+				<p:commandButton value="Adicionar" icon="ui-icon-plus" action="#{mbeanPergunta.addArquetipo}" update="dtArquetipo" />
+
+			</h:panelGrid>
+
+			<h:panelGrid style="width: 100%">
+
+				<p:dataTable id="dtArquetipo" value="#{mbeanPerguntaModel.arquetipos}" var="linha" emptyMessage="Nenhum arquétipo adicionado">
+
+					<p:column headerText="Arquétipo" styleClass="coluna70">
+						<h:outputText value="#{linha.arquetipoModel.pergunta}" />
+					</p:column>
+
+					<p:column headerText="Ordem" styleClass="coluna20">
+						<p:inputText value="#{linha.ordem}" maxlength="2" styleClass="coluna95" />
+					</p:column>
+
+					<p:column styleClass="coluna010">
+						<div align="center">
+							<p:commandLink title="Clique aqui para remover o arquétipo" action="#{mbeanPergunta.removeArquetipo}" process="@this" update="@form">
+								<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								<f:setPropertyActionListener target="#{mbeanPergunta.quizPerguntaArquetipoSelecionado}" value="#{linha}" />
+							</p:commandLink>
+						</div>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+		</h:panelGroup>
+
+	</h:panelGrid>
+
+	<h:panelGroup id="pgRespostas">
+
+		<p:fieldset rendered="#{mbeanPerguntaModel.multiplo or mbeanPerguntaModel.combo or mbeanPerguntaModel.radio or mbeanPerguntaModel.consequencia}">
+
+			<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 80%">
+				
+				<h:outputText value="Resposta" />
+				<h:outputText value="" />
+
+				<p:inputText id="itaResposta" value="#{mbeanPergunta.resposta}" maxlength="100" styleClass="coluna98" onkeypress="return clickClassEnter(event, 'btnAddResposta')" />			
+				<p:commandButton id="btnAddResposta" icon="ui-icon-plus" value="Adicionar" action="#{mbeanPergunta.addResposta}" process="@this, pgRespostas" update="pgRespostas" oncomplete="$('input[id*=itaResposta]').focus()" styleClass="btnAddResposta"/>
+			
+			</h:panelGrid>
+
+			<h:panelGrid columns="1" styleClass="coluna100">
+
+				<p:dataTable rowIndexVar="index" value="#{mbeanPerguntaModel.respostas}" var="resposta" id="dtRespostas" emptyMessage="Nenhuma resposta adicionada">
+
+					<p:column headerText="Respostas" styleClass="coluna42">
+						<p:inputText id="resposta" required="true" label="Resposta linha #{index+1}" value="#{resposta.resposta}" maxlength="200" onkeypress="return clickClassEnter(event, 'btnAddResposta#{index}');" styleClass="inputResposta#{index} coluna95" />
+					</p:column>
+
+					<p:column headerText="Fórmula" styleClass="coluna40" rendered="#{mbeanPerguntaModel.consequencia}">
+						<p:inputText value="#{resposta.formulaConsequencia}" maxlength="200" styleClass="coluna95" />
+					</p:column>
+
+					<p:column styleClass="coluna03">
+						<div align="center">
+							<p:commandLink action="#{mbeanPergunta.addResposta}" update="@form" styleClass="btnAddResposta#{index}">
+								<h:graphicImage value="../resources/images/plus16.png" style="border: 0px" />
+							</p:commandLink>
+						</div>
+					</p:column>
+
+					<p:column headerText="Padrão" styleClass="coluna05">
+						<p:selectBooleanCheckbox value="#{resposta.flagDefault}" />
+					</p:column>
+
+					<p:column headerText="Pontos" styleClass="coluna05">
+						<p:inputNumber value="#{resposta.pontos}" maxlength="8" decimalPlaces="2" thousandSeparator="" styleClass="autoComplete90"/>
+					</p:column>
+
+					<p:column headerText="Excluir" styleClass="coluna05">
+						<div align="center">
+							<p:commandLink id="clExcluir" action="#{mbeanPergunta.removerResposta}" update="@form" process="@form">
+								<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								<f:setPropertyActionListener target="#{mbeanPergunta.respostaQuizModel}" value="#{resposta}" />
+							</p:commandLink>
+						</div>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGrid>
+
+		</p:fieldset>
+
+	</h:panelGroup>
+	
+</ui:composition>

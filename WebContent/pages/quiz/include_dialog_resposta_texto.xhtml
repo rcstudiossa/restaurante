@@ -1,0 +1,23 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+	
+	<p:dialog dynamic="true" modal="true" resizable="false" closeOnEscape="true" widgetVar="dlgRespostaTexto" header="Digite as informações desejadas" styleClass="dialog70">
+		
+		<p:ajax event="close" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:gridProcedimentoResultado" />
+		
+		<h:panelGroup id="pgTexto">
+			
+			<p:scrollPanel id="spTexto" mode="native" styleClass="scrollPanelDialog" style="height: calc(70vh - 95px)">
+			
+				<p:inputTextarea id="itRespostaTextoLivre" value="#{solicitacaoExameFuncionarioFaces.resultadoSelecionado.respostaEscolhida}" rows="15" autoResize="false" maxlength="99999" styleClass="coluna98 textareaDialog" style="margin-left: 5px; margin-top: 5px; height: calc(70vh - 115px)"/>			
+			
+			</p:scrollPanel>
+			
+			<p:panel style="margin-top: 5px;">
+				<p:commandButton id="btnFecharDialogRespostaTexto" value="Fechar" icon="ui-icon-close" oncomplete="PF('dlgRespostaTexto').hide();" />
+			</p:panel>
+		
+		</h:panelGroup>
+		
+	</p:dialog>
+
+</ui:composition>

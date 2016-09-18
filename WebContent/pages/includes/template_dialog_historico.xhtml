@@ -1,0 +1,33 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+	
+	<p:commandButton value="Histórico" icon="ui-icon-clock" action="#{mbean.visualizarHistorico}" oncomplete="PF('dlgHistorico').show()" update="spHistorico" rendered="#{mbeanModel.id != null}" style="margin-left: 5px"/>
+	
+	<p:dialog id="dialogHistorico" header="Histórico de Atualizações" widgetVar="dlgHistorico" styleClass="dialog80" modal="true" closeOnEscape="true" resizable="false">
+
+		<p:scrollPanel id="spHistorico" mode="native" styleClass="scrollPanelDialog" style="height: calc(80vh - 95px)">
+
+			<p:accordionPanel multiple="true" var="linha" value="#{mbeanModel.historico}">
+
+				<p:tab>
+					<f:facet name="title">
+						<h:outputText value="#{linha.usuarioCadastroModel.nome} - " />
+						<h:outputText value="#{linha.dataCadastro}">
+							<ui:include src="/pages/includes/include_gmt_format.xhtml" />
+						</h:outputText>
+					</f:facet>
+					
+					<ui:insert name="dados_historico" />
+					
+				</p:tab>
+
+			</p:accordionPanel>
+
+		</p:scrollPanel>
+
+		<p:panel style="margin-top: 5px">
+			<p:commandButton type="button" value="Fechar" icon="ui-icon-close" onclick="PF('dlgHistorico').hide();" />
+		</p:panel>
+
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cabecalhoFuncionario" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="1e71b088-7ec2-4379-b7a4-1d7b8c2de8d0">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String"/>
+	<parameter name="titulo" class="java.lang.String"/>
+	<parameter name="ID" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select converter(F.MATRICULA, 'top10sysSistemas') MATRICULA,
+converter(F.NOME, 'top10sysSistemas') NOME,
+converter(F.RG, 'top10sysSistemas') rg,
+converter(F.CPF, 'top10sysSistemas') cpf,
+f.data_nascimento,
+case sexo when 1 then 'MASCULINO' else 'FEMININO' end sexo,
+a.data,
+(select nome from origem o where o.id = a.origem_id) origem,
+(select imagem from origem o where o.id = a.origem_id) imagem,
+(select nome_empresa from origem o where o.id = a.origem_id) NOME_EMPRESA,
+(SELECT NOME FROM USUARIO U WHERE U.ID = A.USUARIO_RESPONSAVEL_ID) usuario,
+OBTER_IDADE(F.DATA_NASCIMENTO) idade, a.data
+  from atendimento a, funcionario f
+ where a.funcionario_id = f.id
+   and a.id = $P{ID}]]>
+	</queryString>
+	<field name="matricula" class="java.lang.String"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="rg" class="java.lang.String"/>
+	<field name="cpf" class="java.lang.String"/>
+	<field name="data_nascimento" class="java.sql.Date"/>
+	<field name="sexo" class="java.lang.String"/>
+	<field name="data" class="java.sql.Date"/>
+	<field name="origem" class="java.lang.String"/>
+	<field name="imagem" class="java.lang.String"/>
+	<field name="nome_empresa" class="java.lang.String"/>
+	<field name="usuario" class="java.lang.String"/>
+	<field name="idade" class="java.lang.String"/>
+	<title>
+		<band height="50" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="14" width="555" height="16" uuid="32c19c74-e96d-4d94-bdff-b7488211de9d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{origem}]]></textFieldExpression>
+			</textField>
+			<image vAlign="Top" onErrorType="Blank">
+				<reportElement mode="Opaque" x="15" y="3" width="60" height="47" uuid="baa83131-952f-4065-82b1-a6192e5ee467"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR} + $F{imagem}]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="29" width="555" height="16" uuid="38ad74f7-d921-4b02-9824-adf3fe151bf5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{titulo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="555" height="15" uuid="65151661-ee99-46db-881a-a919cfd1c939"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome_empresa}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="58" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="3" width="555" height="55" uuid="8aea841d-d38f-4d79-a433-5498e2ba60d3"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="345" y="22" width="115" height="16" uuid="9412e3cf-b3dd-453d-9250-2877fe9a7c3d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sexo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="22" width="65" height="16" uuid="7b7973e3-f12c-401e-9845-3f8e49f4ade0"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Sexo:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="59" y="22" width="204" height="16" uuid="bbd52c07-642e-41b4-aced-02516aaaf233"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="6" width="56" height="16" uuid="bacf5ba1-b9e2-44b3-a695-ce110ec975cc"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Matrícula:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement x="59" y="6" width="63" height="16" uuid="b642b80e-695a-4c04-ad4e-5190c11cbbe7"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{matricula}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="22" width="56" height="16" uuid="67e898d7-94ea-4a29-b784-a262e0ff6c21"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Funcionário:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="38" width="65" height="16" uuid="e6d48b68-dbcc-4c24-bd43-1c05c31402da"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Responsável:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="345" y="6" width="106" height="16" uuid="77df914c-643e-4725-a122-bcb5e5f0ec61"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data_nascimento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="345" y="38" width="210" height="16" uuid="7b566695-a8da-4a09-953b-de135b4521b7"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{usuario}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="6" width="65" height="16" uuid="30c8f816-8358-4a65-9e44-32c962cf246f"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Nascimento:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement x="481" y="6" width="74" height="16" uuid="5ec361a8-7b79-4b37-8785-93a22d7b4f91"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="451" y="6" width="30" height="16" uuid="97766eaf-da0c-435e-8ff1-f97eb5c2d374"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Idade:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="6" width="30" height="16" uuid="c7e659d1-83ac-4e7d-a91b-77509eb4fb05"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Data:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
+				<reportElement x="152" y="6" width="81" height="16" uuid="dfef6c7a-6f6a-49ec-bb4a-5b7126010d9c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="00000" isBlankWhenNull="true">
+				<reportElement x="59" y="38" width="63" height="16" isRemoveLineWhenBlank="true" uuid="b09d5d91-1161-4dd4-95e0-f3c7a84ee4a4"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rg}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="38" width="56" height="16" isRemoveLineWhenBlank="true" uuid="51e95fb2-4630-4af9-9aca-5a67e7235ced"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="38" width="28" height="16" isRemoveLineWhenBlank="true" uuid="d50110a6-e64d-4587-964f-6347f38860af"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[CPF:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="000.000.000-00" isBlankWhenNull="true">
+				<reportElement x="150" y="38" width="113" height="16" isRemoveLineWhenBlank="true" uuid="1cea6b21-2656-44c3-9e98-5dc93fc271fc"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Arial" size="8" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cpf}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>

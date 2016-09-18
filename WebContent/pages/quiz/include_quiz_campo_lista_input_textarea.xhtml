@@ -1,0 +1,45 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+		<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 100%; margin-left: 2px; margin-top: 7px" rendered="#{!isDisabled}">
+			
+			<h:outputText value="#{quiz.apelido}" />
+			<h:outputText value="" />
+			
+			<p:inputTextarea value="#{quiz.respostaEscolhida}" maxlength="#{quiz.maxlength}" rows="#{quiz.rows}" autoResize="false" styleClass="coluna98" />
+			<p:commandButton disabled="#{isDisabled}" value="Adicionar" icon="fa fa-plus-square" action="#{mbeanQuiz.addInputText(quiz)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" styleClass="btnAddInputText" />
+
+		</h:panelGrid>
+		
+		<h:panelGrid rendered="#{isDisabled}"/>
+			
+		<p:dataTable value="#{quiz.respostasEscolhidas}" var="inputText" rowIndexVar="indexVar" emptyMessage="Nenhum registro adicionado" style="margin: 0px 5px 5px 5px;">
+			
+			<p:column headerText="" styleClass="coluna2">
+				<h:outputText value="#{indexVar + 1}" />
+			</p:column>
+			
+			<p:column headerText="#{quiz.apelido}" styleClass="coluna95">
+				<h:outputText value="#{inputText}" rendered="#{isDisabled}" />
+				<p:inputTextarea value="#{quiz.respostasEscolhidas[indexVar]}" maxlength="#{quiz.maxlength}" rows="#{quiz.rows}" autoResize="false" styleClass="coluna98" rendered="#{!isDisabled}" />
+			</p:column>
+			
+			<p:column headerText="" styleClass="coluna2" style="padding:0px">
+				<h:panelGrid styleClass="pgNoBorder">
+					<p:commandLink title="Clique para subir o registro" action="#{mbeanQuiz.subir(quiz, inputText)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" rendered="#{!isDisabled}">
+						<h:graphicImage value="../resources/images/up.png" width="12px" style="border: 0px" />
+					</p:commandLink>
+					<p:commandLink title="Clique para descer o registro" action="#{mbeanQuiz.descer(quiz, inputText)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" rendered="#{!isDisabled}" >
+						<h:graphicImage value="../resources/images/down.png" width="12px" style="border: 0px" />
+					</p:commandLink>
+				</h:panelGrid>
+			</p:column>
+			
+			<p:column headerText="" styleClass="coluna3" rendered="#{!isDisabled}">
+				<div align="center">
+					<p:commandLink title="Clique aqui para excluir o registro" styleClass="fa fa-remove fontAwesome18Red" action="#{mbeanQuiz.removeInputText(quiz, inputText)}" process="@this, #{idAtualizacao}" update="#{idAtualizacao}" rendered="#{!isDisabled}" />
+				</div>
+			</p:column>
+			
+		</p:dataTable>
+		
+</ui:composition>

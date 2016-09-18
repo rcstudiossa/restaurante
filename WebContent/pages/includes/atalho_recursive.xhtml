@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<c:forEach items="${menus}" var="linha">
+
+		<c:if test="${not empty linha.subMenus}">
+
+			<c:if test="${linha.subMenus.size() == 1}">
+
+				<c:if test="${!empty linha.icone}">
+
+					<p:commandButton id="btnAtalho#{linha.subMenus.get(0).id}" icon="#{linha.icone}" ajax="false" action="#{menuFaces.redirecionar}" styleClass="#{linha.subMenus.get(0).id == menuFaces.menuModel.id?'selecionado':null}" style="margin-top:5px; width: 64px; height:64px" disabled="#{empty session.atendimentoSessao.id and linha.subMenus.get(0).flagDependeFuncionario}">
+						<f:setPropertyActionListener target="#{menuFaces.menuModel}" value="#{linha.subMenus.get(0)}" />
+					</p:commandButton>
+
+					<pe:tooltip for="btnAtalho#{linha.subMenus.get(0).id}" value="#{linha.descricao}" />
+
+				</c:if>
+
+			</c:if>
+
+			<c:if test="${linha.subMenus.size() > 1}">
+
+				<c:if test="${!empty linha.icone}">
+
+					<p:commandButton id="btnAtalho#{linha.id}" icon="#{linha.icone}" type="button" style="margin-top:5px; width: 64px; height:64px" styleClass="#{linha.id == menuFaces.menuModel.menuModel.id?'selecionado':null}"/>
+
+					<p:tieredMenu overlay="true" trigger="btnAtalho#{linha.id}" my="left top" at="right top" style="width: 180px;">
+
+						<ui:include src="/pages/includes/menu_recursive.xhtml">
+							<ui:param name="menus" value="#{linha.subMenus}" />
+						</ui:include>
+
+					</p:tieredMenu>
+
+					<pe:tooltip for="btnAtalho#{linha.id}" value="#{linha.descricao}" />
+
+				</c:if>
+
+			</c:if>
+
+			<ui:include src="/pages/includes/atalho_recursive.xhtml">
+				<ui:param name="menus" value="${linha.subMenus}" />
+			</ui:include>
+
+		</c:if>
+
+		<c:if test="${empty linha.subMenus}">
+
+			<c:if test="${!empty linha.icone}">
+
+				<p:commandButton id="btnAtalho#{linha.id}" icon="#{linha.icone}" ajax="false" action="#{menuFaces.redirecionar}" styleClass="#{linha.id == menuFaces.menuModel.id?'selecionado':null}" style="margin-top:5px; width: 64px; height:64px" disabled="#{empty sessionScope.atendimentoSessao.id and linha.flagDependeFuncionario}">
+					<f:setPropertyActionListener target="#{menuFaces.menuModel}" value="#{linha}" />
+				</p:commandButton>
+
+				<pe:tooltip for="btnAtalho#{linha.id}" value="#{linha.descricao}" />
+				
+			</c:if>
+
+		</c:if>
+
+	</c:forEach>
+
+</ui:composition>

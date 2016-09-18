@@ -1,0 +1,140 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid columns="2" columnClasses="coluna50_2, coluna50_2" style="width: 100%">
+
+		<p:panel header="Dados de funcionário">
+
+			<h:panelGrid columns="2" columnClasses="coluna65, coluna35" style="width: 98%">
+
+				<p:outputLabel for="itNome" value="Nome" />
+				<p:outputLabel for="itApelido" value="Nome Abrev." style="margin-left: 10px" />
+
+				<p:inputText id="itNome" value="#{mbeanModel.nome}" disabled="#{disabled}" required="true" maxlength="100" style="width: 98%" />
+				<p:inputText id="itApelido" value="#{mbeanModel.apelido}" disabled="#{disabled}" maxlength="100" style="width: 85%; margin-left: 10px" />
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="3" columnClasses="coluna25, coluna35, coluna40" style="width: 98%">
+				
+				<h:outputText value="Matricula" />
+				<p:outputLabel for="itRg" value="RG" />
+				<p:outputLabel for="itIdentificador" value="CPF" />
+
+				<p:inputText value="#{mbeanModel.matricula}" maxlength="10" disabled="#{disabled}" styleClass="coluna90" />
+				<p:inputText id="itRg" value="#{mbeanModel.rg}" disabled="#{disabled}" maxlength="20" styleClass="coluna90" />
+				<p:inputMask id="itIdentificador" value="#{mbeanModel.cpf}" disabled="#{disabled}" mask="999.999.999-99" styleClass="coluna90" required="true" />
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" columnClasses="coluna25, coluna75" style="width: 100%">
+
+				<h:outputLabel for="telefone" value="Telefone" />
+				<h:outputLabel for="itEmail" value="E-mail" />
+
+				<p:inputMask id="telefone" mask="(99) 9999-9999" value="#{mbeanModel.telefone}" disabled="#{disabled}" maxlength="14" styleClass="coluna90" />
+				<p:inputText id="itEmail" value="#{mbeanModel.email}" disabled="#{disabled}" maxlength="200" styleClass="coluna92" />
+
+			</h:panelGrid>
+			
+			<h:panelGrid columns="3" columnClasses="coluna25, coluna25, coluna50" style="width: 100%">
+
+				<h:outputLabel for="campoSexo" value="Sexo" />
+				<h:outputText value="Nascimento" />
+				<p:outputLabel for="cbFlagAtivo" value="Ativo?" />
+
+				<p:selectOneMenu id="campoSexo" value="#{mbeanModel.sexo}" disabled="#{disabled}" styleClass="coluna95">
+					<f:selectItem itemValue="" itemLabel="Não selecionado" />
+					<f:selectItems value="#{mbean.comboSexo}" />
+				</p:selectOneMenu>
+				<ts:calendar value="#{mbeanModel.dataNascimento}" disabled="#{disabled}"/>
+				<p:selectBooleanCheckbox id="cbFlagAtivo" value="#{mbeanModel.flagAtivo}" disabled="#{disabled}" />
+
+			</h:panelGrid>
+
+		</p:panel>
+
+		<p:panel id="pgDadosUsuario" header="Dados de usuário">
+
+			<h:panelGrid columns="1" style="width: 100%; margin-top:5px">
+
+				<h:outputText value="Usuário?" />
+				<p:selectBooleanCheckbox id="cbFlagUsuario" value="#{mbeanModel.flagUsuario}" disabled="#{disabled}">
+					<p:ajax global="false" update="pgDadosUsuario" />
+				</p:selectBooleanCheckbox>
+
+				<p:outputLabel for="setor" value="Setor" />
+				<p:selectOneMenu id="setor" value="#{mbeanModel.setorModel.id}" disabled="#{disabled || !mbeanModel.flagUsuario}" required="true" styleClass="coluna98">
+					<f:selectItem itemLabel="Selecione" itemValue="" />
+					<f:selectItems value="#{mbean.comboSetor}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="3" columnClasses="coluna40, coluna30, coluna30" style="width: 100%">
+
+				<p:outputLabel for="itLogin2" value="Login" />
+				<p:outputLabel for="itSenha" value="Senha" />
+				<p:outputLabel for="itCSenha" value="Confirmar Senha" />
+
+				<p:inputText id="itLogin2" value="#{mbeanModel.login}" disabled="#{disabled || !mbeanModel.flagUsuario}" required="true" maxlength="30" style="width: 95%" />
+				<p:password id="itSenha" autocomplete="off" value="#{mbean.senha}" maxlength="20" disabled="#{disabled || !mbeanModel.flagUsuario}" style="width: 95%" />
+				<p:password id="itCSenha" autocomplete="off" disabled="#{disabled || !mbeanModel.flagUsuario}" maxlength="20" value="#{mbean.confirmarSenha}" style="width: 95%" />
+
+			</h:panelGrid>
+			
+			<h:panelGrid columns="1" style="width: 100%">
+						
+			<h:outputText value="Observação" />
+			<p:inputText value="#{mbeanModel.observacao}" maxlength="100" disabled="#{disabled}" styleClass="coluna99" />
+			
+			</h:panelGrid>
+
+		</p:panel>
+
+	</h:panelGrid>
+
+	<h:panelGrid columns="1" style="width: 100%">
+
+		<p:panel header="Endereço">
+		
+			<h:panelGrid columns="5" columnClasses="coluna10, coluna10, coluna20, coluna20, coluna40" style="width: 100%">
+
+				<h:outputLabel value="CEP" />
+				<h:outputLabel value="Estado" />
+				<h:outputLabel value="Cidade" />
+				<h:outputLabel value="Bairro" />
+				<h:outputLabel value="Logradouro" />
+
+				<p:inputMask mask="99.999-999" value="#{mbeanModel.cep}" maxlength="10" disabled="#{disabled}" styleClass="coluna90" />
+				<p:selectOneMenu value="#{mbeanModel.cidadeModel.estadoModel.id}" disabled="#{disabled}" style="width: 98%">
+					<f:selectItems value="#{mbean.comboEstado}" />
+					<p:ajax global="false" listener="#{mbean.instanciarComboCidade}" process="@this" update="somCidade" />
+				</p:selectOneMenu>
+				<p:selectOneMenu id="somCidade" value="#{mbeanModel.cidadeModel.id}" disabled="#{disabled}" style="width: 98%">
+					<f:selectItem itemValue="" itemLabel="Não selecionado" />
+					<f:selectItems value="#{mbean.comboCidade}" />
+					<p:ajax global="false" listener="#{mbean.instanciarComboBairro}" process="@this" update="somBairro" />
+				</p:selectOneMenu>
+				<p:selectOneMenu id="somBairro" value="#{mbeanModel.bairroModel.id}" disabled="#{disabled}" style="width: 98%">
+					<f:selectItem itemValue="" itemLabel="Não selecionado" />
+					<f:selectItems value="#{mbean.comboBairro}" />
+				</p:selectOneMenu>
+				<p:inputText value="#{mbeanModel.endereco}" maxlength="200" disabled="#{disabled}" styleClass="coluna95" />
+			
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2" columnClasses="coluna10, coluna90" style="width: 100%">
+			
+				<h:outputLabel value="Número" />
+				<h:outputLabel value="Complemento" />
+
+				<p:inputText value="#{mbeanModel.numero}" maxlength="10" disabled="#{disabled}" styleClass="coluna90" />
+				<p:inputText value="#{mbeanModel.complemento}" maxlength="100" disabled="#{disabled}" styleClass="coluna98" />
+			
+			</h:panelGrid>
+			
+		</p:panel>
+
+	</h:panelGrid>
+
+</ui:composition>

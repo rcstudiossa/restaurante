@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="teste" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ca0a06b5-6852-4e23-bbed-be93df617b03">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="TITULO" class="java.lang.String"/>
+	<parameter name="PARAMETROS" class="java.lang.String"/>
+	<parameter name="IMAGEM1" class="java.lang.String"/>
+	<parameter name="IMAGEM2" class="java.lang.String"/>
+	<parameter name="FLAG_EXCEL" class="java.lang.Boolean"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="63">
+			<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+			<textField>
+				<reportElement x="81" y="0" width="400" height="20" uuid="1200c979-1724-4d45-b49f-e4b01ed6e80f">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" onErrorType="Icon">
+				<reportElement x="0" y="0" width="78" height="59" uuid="8018e0b4-962a-44b9-9a40-b0006dccdb4e">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{IMAGEM1}]]></imageExpression>
+			</image>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="91" y="35" width="385" height="24" uuid="5630c0c7-a180-4ded-9972-9e442e6a5462">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PARAMETROS}]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Icon">
+				<reportElement x="487" y="1" width="68" height="59" uuid="e62aee4d-c769-4f40-9003-7b4036f9bcfd"/>
+				<imageExpression><![CDATA[$P{IMAGEM2}]]></imageExpression>
+			</image>
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="81" y="23" width="400" height="37" uuid="92355e2f-6242-4768-98b9-4f98234affb7">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.75" lineStyle="Dotted"/>
+				</graphicElement>
+			</rectangle>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="0" y="0" width="200" height="40" uuid="0b518747-4adf-4052-8ed0-446dfbe0270b">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} != null && $P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PARAMETROS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="91" y="25" width="56" height="14" uuid="1c056720-b55c-4c19-9fd4-3a60bc076683">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Top">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Filtros]]></text>
+			</staticText>
+			<line>
+				<reportElement x="93" y="36" width="25" height="1" uuid="ca7c73e1-f9aa-48d6-b4c5-45daaffea046">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="13">
+			<textField>
+				<reportElement x="467" y="1" width="55" height="12" uuid="41c88d55-5094-44dd-bac9-efb5acd3fcb2">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="522" y="1" width="19" height="12" uuid="2de8e6ba-a803-4566-88f3-81e0733bc7b2">
+					<printWhenExpression><![CDATA[$P{FLAG_EXCEL} == null || !$P{FLAG_EXCEL}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" "+ $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="0" y="1" width="200" height="12" uuid="d23ddeb3-ce4b-4394-8ba7-1c2e53758eed"/>
+				<box leftPadding="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="91">
+			<textField>
+				<reportElement x="81" y="0" width="400" height="20" uuid="d2ced82d-85fa-4e21-b7be-d179017edcfe"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TITULO}]]></textFieldExpression>
+			</textField>
+			<rectangle radius="10">
+				<reportElement mode="Transparent" x="81" y="22" width="400" height="37" uuid="8cf66ea9-4031-4d01-854b-e9bf12053b4a"/>
+				<graphicElement>
+					<pen lineWidth="0.75" lineStyle="Dotted"/>
+				</graphicElement>
+			</rectangle>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="91" y="34" width="385" height="24" uuid="cf4b445e-6d6f-4772-b873-4143f8b83d6b"/>
+				<textElement>
+					<font fontName="SansSerif" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{PARAMETROS}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="93" y="33" width="22" height="1" uuid="8fcc1c1b-8466-4de5-b2b1-61544e30f879"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<image scaleImage="RetainShape" onErrorType="Icon">
+				<reportElement x="0" y="0" width="78" height="59" uuid="094f251f-ddcb-4d7e-8900-2aa8d4a59b90"/>
+				<imageExpression><![CDATA[$P{IMAGEM1}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Transparent" x="91" y="23" width="46" height="11" uuid="90279b89-d9ff-49ee-9c75-ddc6e49aa756"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Filtros]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="61" width="553" height="20" backcolor="#CCCCCC" uuid="3097d615-9ff4-4f20-9cc7-2acd0c1815e1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nenhum resultado com este(s) filtro(s)]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="8" y="61" width="100" height="20" uuid="c69ce280-6975-4488-b6df-4dbb286db0f5"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image onErrorType="Icon">
+				<reportElement x="487" y="0" width="68" height="59" uuid="35678db1-a061-4494-8d40-f34ac8ec6f87"/>
+				<imageExpression><![CDATA[$P{IMAGEM2}]]></imageExpression>
+			</image>
+		</band>
+	</noData>
+</jasperReport>

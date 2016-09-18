@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<f:view xmlns:f="http://java.sun.com/jsf/core" contentType="text/html" encoding='UTF-8'>
+
+	<h:head>
+		<title>Sistema Básico - Sistema de Gestão Imobiliária</title>
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/resources/css/geral.css" />
+		<link rel="shortcut icon" href="#{request.contextPath}/resources/images/favicon.ico" type="image/x-icon" />
+	</h:head>
+
+	<h:body style="font-size: 12px" onload="javascript:document.getElementById('login').focus();">
+
+		<p:growl id="msgCadastro" globalOnly="false" showDetail="true" showSummary="false" autoUpdate="true" escape="false" />
+
+		<div id="divDashBoard2" style="width: 100%; text-align: center" class="fundo corner">
+
+			<h:graphicImage width="99%" height="150" value="/resources/images/banner.png" />
+
+		</div>
+
+		<div id="divDashBoard3" style="margin-top: 6px" class="corner">
+
+			<div id="divCenter" align="center" style="width: 100%; height: 600px; padding-top: 30px" class="fundo corner">
+
+				<h:panelGrid id="panelGridLogin" columns="1" style="vertical-align: middle;">
+
+					<h:form id="formLogin" prependId="false">
+
+						<p:panel id="panelLogin" header="Controle de acesso" style="width: 280px; text-align: left">
+
+							<h:panelGrid style="width: 250px;" columns="2" columnClasses="coluna30, coluna70">
+
+								<h:outputLabel value="Login:" />
+								<p:inputText value="#{loginFaces.usuarioModel.login}" id="login" style="width: 96%;" />
+
+								<h:outputLabel value="Senha:" />
+								<p:password value="#{loginFaces.usuarioModel.senha}" style="width: 96%;" autocomplete="off" />
+
+								<h:panelGroup />
+								<p:commandLink onclick="PF('dlgTrocarSenha').show()">
+									<h:outputText value="Trocar senha" style="font-size: 10px; text-decoration: underline;" />
+								</p:commandLink>
+
+							</h:panelGrid>
+
+							<h:panelGrid style="width: 250px; margin-top: 10px">
+
+								<p:commandButton id="btnAcessar" icon="cadeado" title="Acessar o Sistema" action="#{loginFaces.acessar}" update="@form :formEscolherMenu:pgEscolherFuncao" oncomplete="if(args != undefined &amp;&amp; args.possuiVariasFuncoes){PF('dlgEscolherFuncao').show();}" style="height: 40px;width: 40px; margin-right:5px" />
+
+							</h:panelGrid>
+
+						</p:panel>
+						
+						<p:poll interval="480" process="@this" widgetVar="poll" autoStart="true" />
+
+					</h:form>
+
+				</h:panelGrid>
+
+				<br />
+
+				<div align="center">
+					<ui:insert name="msg" />
+					<h:outputText value="Sessão expirada" style="font-size:14px; color:red" rendered="#{param['expired']}" />
+				</div>
+
+			</div>
+
+		</div>
+
+		<h:panelGroup id="pgInformativo" layout="block" styleClass="fundo inferior corner" style="padding: 2px">
+
+			<h:panelGrid title="" columns="1" style="width:99.5%;" columnClasses="colunaInformativo1">
+				<ui:include src="/pages/includes/sobre.xhtml" />
+			</h:panelGrid>
+
+		</h:panelGroup>
+
+		<script type="text/javascript">
+			function redimensionar() {
+				$("#divCenter").height($(window).height() - 195);
+			}
+
+			$(document).ready(function() {
+				redimensionar();
+			});
+
+			$(window).resize(function() {
+				redimensionar();
+			});
+		</script>
+
+		<h:form id="formEscolherMenu" prependId="false">
+
+			<p:dialog widgetVar="dlgEscolherFuncao" header="Selecione a função" closeOnEscape="true" modal="true" styleClass="dialog60" resizable="false">
+
+				<h:panelGroup id="pgEscolherFuncao">
+
+					<p:panel>
+						<h:panelGrid style="width: 100%">
+							<h:outputLabel value="Origem:" />
+							<p:selectOneMenu id="omOrigem" value="#{loginFaces.origemModel.id}" style="width:30%">
+								<f:selectItems value="#{loginFaces.comboOrigens}" />
+								<p:ajax listener="#{loginFaces.carregarFuncoes}" process="@this" update="dgFuncoes" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+					</p:panel>
+
+					<p:panel header="Funções" style="margin-top: 5px;">
+
+						<p:scrollPanel id="spEscolherFuncao" mode="native" styleClass="scrollPanelDialog" style="height: calc(60vh - 175px); border: 0px;">
+
+							<h:panelGroup id="dgFuncoes" layout="block">
+
+								<p:dataGrid id="dgFuncoes2" value="#{loginFaces.funcoesAutenticacao}" var="funcao" columns="3" styleClass="gridNoBorder">
+	
+									<p:column style="text-align: center">
+										<div align="center">
+											<p:commandButton value="#{funcao.funcaoModel.descricao}" escape="false" action="#{loginFaces.escolherFuncao}" ajax="false" style="font-size: 12px; height: 80px; width: 230px;">
+												<f:setPropertyActionListener target="#{loginFaces.usuarioFuncaoEscolhida}" value="#{funcao}" />
+											</p:commandButton>
+										</div>
+									</p:column>
+	
+								</p:dataGrid>
+							
+							</h:panelGroup>
+
+						</p:scrollPanel>
+
+					</p:panel>
+					
+				</h:panelGroup>
+
+			</p:dialog>
+
+		</h:form>
+
+		<h:form id="formAlterarSenha" prependId="false">
+
+			<p:dialog modal="true" widgetVar="dlgTrocarSenha" header="Alterar senha" closeOnEscape="true" width="400" height="200">
+
+				<h:panelGrid columns="2" styleClass="coluna100" id="pgTrocarSenha">
+
+					<p:outputLabel for="loginTrocaSenha" value="Login" />
+					<p:inputText id="loginTrocaSenha" value="#{loginFaces.usuarioAuxiliarModel.login}" required="true" style="width: 97%;" />
+
+					<p:outputLabel for="senhaTrocaSenha" value="Senha" />
+					<p:password id="senhaTrocaSenha" value="#{loginFaces.usuarioAuxiliarModel.senha}" required="true" style="width: 97%;" />
+
+					<p:outputLabel for="novaSenhaTrocaSenha" value="Nova senha" />
+					<p:password id="novaSenhaTrocaSenha" value="#{loginFaces.novaSenha}" required="true" style="width: 97%;" />
+
+					<p:outputLabel for="confirmeNovaTrocaSenha" value="Confirme nova senha" />
+					<p:password id="confirmeNovaTrocaSenha" value="#{loginFaces.novaSenhaConfirmacao}" required="true" style="width: 97%;" />
+
+					<p:commandButton type="button" value="Alterar" icon="salvar" onclick="PF('cdAlterar').show()" />
+
+				</h:panelGrid>
+
+			</p:dialog>
+
+			<p:confirmDialog message="Confirma alteração do registro?" header="Aviso" severity="alert" widgetVar="cdAlterar" modal="true">
+				<p:commandButton process="@form" update="pgTrocarSenha" value="Sim" onclick="PF('cdAlterar').hide()" action="#{loginFaces.trocarSenha}" />
+				<p:commandButton type="button" value="Não" onclick="PF('cdAlterar').hide()" />
+			</p:confirmDialog>
+
+		</h:form>
+
+		<p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+		
+		<p:dialog modal="true" widgetVar="statusDialog" header="Processando solicitação..." draggable="false" closable="false" resizable="false" width="230">
+			<p:graphicImage value="../resources/images/ajax-loader.gif" style="border: 0px;width:200px;height:25px" />
+		</p:dialog>
+
+	</h:body>
+	
+
+</f:view>
+
+</html>

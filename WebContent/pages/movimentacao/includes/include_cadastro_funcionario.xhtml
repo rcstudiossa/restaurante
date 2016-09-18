@@ -1,0 +1,140 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid columns="5" columnClasses="coluna10, coluna45, coluna25, coluna10, coluna10" style="width: 98%">
+
+		<p:outputLabel for="itMatricula" value="Matrícula" />
+		<p:outputLabel for="itNome" value="Nome" />
+		<p:outputLabel for="itApelido" value="Nome Abrev." />
+		<p:outputLabel for="campoSexo" value="Sexo" />
+		<p:outputLabel for="dataNascimento" value="Nascimento *" />
+
+		<p:inputText id="itMatricula" value="#{mbeanModel.matricula}" maxlength="10" required="true" disabled="#{disabled}" styleClass="coluna90" />
+		<p:inputText id="itNome" value="#{mbeanModel.nome}" disabled="#{disabled}" required="true" maxlength="100" style="width: 98%" />
+		<p:inputText id="itApelido" value="#{mbeanModel.apelido}" disabled="#{disabled}" maxlength="100" styleClass="coluna95" />
+		<p:selectOneMenu id="campoSexo" value="#{mbeanModel.sexo}" required="true" disabled="#{disabled}" styleClass="coluna95">
+			<f:selectItem itemValue="" itemLabel="Não selecionado" />
+			<f:selectItems value="#{mbean.comboSexo}" />
+		</p:selectOneMenu>
+		<ts:calendar id="dataNascimento" value="#{mbeanModel.dataNascimento}" required="true" requiredMessage="Nascimento: Campo obrigatório!" disabled="#{disabled}" />
+
+	</h:panelGrid>
+
+	<h:panelGrid columns="7" columnClasses="coluna20, coluna10, coluna10, coluna25, coluna10, coluna10, coluna10" style="width: 98%">
+
+		<p:outputLabel for="cargo" value="Cargo" />
+		<p:outputLabel for="itRg" value="RG" />
+		<p:outputLabel for="itIdentificador" value="CPF" />
+		<h:outputLabel for="itEmail" value="E-mail" />
+		<h:outputLabel for="telefoneComercial" value="Tel. Comercial" />
+		<h:outputLabel for="telefone" value="Tel. Fixo" />
+		<h:outputLabel for="celular" value="Tel. Celular" />
+
+		<p:selectOneMenu id="cargo" value="#{mbeanModel.cargoModel.id}" disabled="#{disabled}" required="true" styleClass="coluna95">
+			<f:selectItem itemLabel="Selecione" itemValue="" />
+			<f:selectItems value="#{mbean.comboCargo}" />
+		</p:selectOneMenu>
+		<p:inputText id="itRg" value="#{mbeanModel.rg}" disabled="#{disabled}" maxlength="20" styleClass="coluna90" />
+		<p:inputMask id="itIdentificador" value="#{mbeanModel.cpf}" disabled="#{disabled}" mask="999.999.999-99" styleClass="coluna90" required="true" />
+		<p:inputText id="itEmail" value="#{mbeanModel.email}" disabled="#{disabled}" maxlength="200" styleClass="coluna95" />
+		<p:inputText id="telefoneComercial" value="#{mbeanModel.telefoneComercial}" disabled="#{disabled}" maxlength="14" styleClass="coluna90 telefone" />
+		<p:inputText id="telefone" value="#{mbeanModel.telefone}" disabled="#{disabled}" maxlength="14" styleClass="coluna90 telefone" />
+		<p:inputText id="celular" value="#{mbeanModel.celular}" disabled="#{disabled}" maxlength="14" styleClass="coluna90 telefone" />
+
+	</h:panelGrid>
+
+	<h:panelGrid columns="2" columnClasses="coluna85, coluna15" style="width: 100%">
+
+		<h:panelGroup>
+
+			<h:panelGrid columns="3" columnClasses="coluna25, coluna40, coluna45" style="width: 100%; margin-left: -3px">
+
+				<p:outputLabel for="campoOrigem" value="Lotação" />
+				<p:outputLabel for="campoAtividade" value="Atividade PM" />
+				<p:outputLabel for="cbFlagAtivo" value="Ativo?" />
+
+				<p:selectOneMenu id="campoOrigem" value="#{mbeanModel.origemModel.id}" required="true" disabled="#{disabled}" styleClass="coluna95">
+					<f:selectItem itemValue="" itemLabel="Não selecionado" />
+					<f:selectItems value="#{mbean.comboOrigem}" />
+				</p:selectOneMenu>
+				<p:selectOneMenu id="campoAtividade" value="#{mbeanModel.atividadeModel.id}" required="true" disabled="#{disabled}" styleClass="coluna95">
+					<f:selectItem itemValue="" itemLabel="Não selecionado" />
+					<f:selectItems value="#{mbean.comboAtividade}" />
+				</p:selectOneMenu>
+				<p:selectBooleanCheckbox id="cbFlagAtivo" value="#{mbeanModel.flagAtivo}" disabled="#{disabled}" />
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="1" style="width: 100%; margin-left: -3px">
+
+				<h:outputText value="Observação" />
+				<p:inputTextarea value="#{mbeanModel.observacao}" maxlength="1000" rows="3" autoResize="false" disabled="#{disabled}" styleClass="coluna99" />
+
+			</h:panelGrid>
+
+		</h:panelGroup>
+
+		<h:panelGrid columns="1" styleClass="coluna100">
+
+			<p:outputPanel id="fotoCam">
+				<div align="center">
+					<h:graphicImage value="../resources/images/sem_foto_cam.gif" height="120" width="100" style="border: 0px" rendered="#{empty mbeanModel.foto}" />
+					<p:media value="#{mbeanModel.fotoView}" player="quicktime" height="120" width="100" rendered="#{!empty mbeanModel.foto}" />
+					<br />
+					<p:commandButton icon="fa fa-camera" value="Abrir Câmera" process="@this" update="pgFotoCam" oncomplete="PF('dlgCam').show()" global="false" style="margin-top: 2px">
+						<f:setPropertyActionListener value="true" target="#{mbean.flagExibirCam}" />
+					</p:commandButton>
+				</div>
+			</p:outputPanel>
+
+		</h:panelGrid>
+
+	</h:panelGrid>
+
+	<p:panel id="pnEndereco" header="Endereço">
+
+		<h:panelGrid id="pgEndereco" columns="5" columnClasses="coluna10, coluna10, coluna20, coluna20, coluna40" style="width: 100%">
+
+			<h:outputLabel value="CEP" />
+			<h:outputLabel value="Estado" />
+			<h:outputLabel value="Cidade" />
+			<h:outputLabel value="Bairro" />
+			<h:outputLabel value="Logradouro" />
+
+			<h:panelGroup layout="block" style="width: 100px">
+				<p:inputMask mask="99.999-999" value="#{mbeanModel.cep}" maxlength="10" onkeypress="return clickClassEnter(event, 'btnBuscarCep')" disabled="#{disabled}" style="width: 82px" />
+				<p:commandLink action="#{mbean.buscarCep}" process="@this, pnEndereco" update="pnEndereco" styleClass="ui-icon ui-icon-search btnBuscarCep" style="float: right; margin-top: 3px" />
+			</h:panelGroup>
+			<p:selectOneMenu value="#{mbeanModel.cidadeModel.estadoModel.id}" disabled="#{disabled}" styleClass="coluna95">
+				<f:selectItems value="#{mbean.comboEstado}" />
+				<p:ajax global="false" listener="#{mbean.instanciarComboCidade}" process="@this" update="somCidade" />
+			</p:selectOneMenu>
+			<p:selectOneMenu id="somCidade" value="#{mbeanModel.cidadeModel.id}" disabled="#{disabled}" styleClass="coluna95">
+				<f:selectItem itemValue="" itemLabel="Não selecionado" />
+				<f:selectItems value="#{mbean.comboCidade}" />
+				<p:ajax global="false" listener="#{mbean.instanciarComboBairro}" process="@this" update="somBairro" />
+			</p:selectOneMenu>
+			<p:selectOneMenu id="somBairro" value="#{mbeanModel.bairroModel.id}" disabled="#{disabled}" styleClass="coluna95">
+				<f:selectItem itemValue="" itemLabel="Não selecionado" />
+				<f:selectItems value="#{mbean.comboBairro}" />
+			</p:selectOneMenu>
+			<p:inputText value="#{mbeanModel.endereco}" maxlength="200" disabled="#{disabled}" styleClass="coluna95" />
+
+		</h:panelGrid>
+
+		<h:panelGrid columns="2" columnClasses="coluna10, coluna90" style="width: 100%">
+
+			<h:outputLabel value="Número" />
+			<h:outputLabel value="Complemento" />
+
+			<p:inputText value="#{mbeanModel.numero}" maxlength="10" disabled="#{disabled}" styleClass="coluna90" />
+			<p:inputText value="#{mbeanModel.complemento}" maxlength="100" disabled="#{disabled}" styleClass="coluna98" />
+
+		</h:panelGrid>
+
+	</p:panel>
+
+	<ui:include src="/pages/includes/include_jquery_telefone.xhtml" />
+
+	<ui:include src="/pages/movimentacao/includes/include_dialog_cam_funcionario.xhtml" />
+
+</ui:composition>

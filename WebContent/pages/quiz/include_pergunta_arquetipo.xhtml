@@ -1,0 +1,33 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid id="pgQuizArquetipo" columns="#{quiz.qtdColunas}" columnClasses="#{quiz.cssColunas}" styleClass="#{quiz.cssDiv}" style="padding: 5px; float: left">
+		
+		<h:panelGrid style="width: 98%">
+		
+			<h:outputLabel value="#{quiz.apelido}" style="vertical-align: top" />
+		
+			<ui:include src="include_quiz_campos.xhtml" />
+			
+		</h:panelGrid>
+		
+		<h:panelGrid rendered="#{quiz.quizPerguntaModel.medidaModel.id != null}" style="width: 98%">
+			
+			<h:outputText value="Und." />
+			<p:selectOneMenu value="#{quiz.unidade}" style="width:99.5%;">
+				<f:selectItems var="unidade" value="#{quiz.quizPerguntaModel.medidaModel.unidadesMedidas}" itemLabel="#{unidade.unidadeMedidaModel.descricao}" itemValue="#{unidade.unidadeMedidaModel.descricao}" />
+				<p:ajax event="change" process="@this, #{idAtualizacao}" listener="#{mbeanQuiz.converterUnidade(quiz)}" update="#{idAtualizacao}" global="false"/>
+			</p:selectOneMenu>
+			
+		</h:panelGrid>
+		
+		<p:dataGrid columns="#{quiz.quizPerguntaModel.arquetipos.size()}" var="arquetipo" value="#{quiz.quizPerguntaModel.arquetipos}" styleClass="gridNoBackgroung gridCorner">
+			<p:column>
+				<h:outputText value="#{arquetipo.arquetipoModel.pergunta}" rendered="#{empty arquetipo.arquetipoModel.apelido}" />
+				<h:outputText value="#{arquetipo.arquetipoModel.apelido}" rendered="#{!empty arquetipo.arquetipoModel.apelido}" />
+				<ui:include src="include_arquetipo.xhtml" />
+			</p:column>
+		</p:dataGrid>
+					
+	</h:panelGrid>
+
+</ui:composition>

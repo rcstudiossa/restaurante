@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="templateSolicitacaoDocumento" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ca85bbb0-3aad-4d0f-ae3d-7d0e8615d757">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="24"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["/Users/marcelo/repositorio_git/HosFlow/web/WEB-INF/relatorios/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SOLICITACAO_DOCUMENTO_ID" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT SD.TEXTO, TSD.DESCRICAO TITULO, SD.ATENDIMENTO_ID, A.ORIGEM_ID, O.DESCRICAO ORIGEM, U.NOME, COALESCE(CONVERTER(F.NOME, 'top10sysSistemas'), '') FUNCIONARIO_NOME, COALESCE(CONVERTER(F.RG, 'top10sysSistemas'), '') FUNCIONARIO_RG, COALESCE(CONVERTER(F.CPF, 'top10sysSistemas'), '') FUNCIONARIO_CPF, O.ENDERECO
+  FROM SOLICITACAO_DOCUMENTO SD, TIPO_SOLICITACAO_DOCUMENTO TSD, ATENDIMENTO A, FUNCIONARIO F, ORIGEM O, USUARIO U
+ WHERE TSD.ID = SD.TIPO_SOLICITACAO_DOCUMENTO_ID
+   AND SD.ATENDIMENTO_ID = A.ID
+   AND F.ID = A.FUNCIONARIO_ID
+   AND O.ID = A.ORIGEM_ID
+   AND U.ID = SD.USUARIO_CADASTRO_ID
+   AND SD.ID = $P{SOLICITACAO_DOCUMENTO_ID}]]>
+	</queryString>
+	<field name="texto" class="java.lang.String"/>
+	<field name="titulo" class="java.lang.String"/>
+	<field name="atendimento_id" class="java.lang.Long"/>
+	<field name="origem_id" class="java.lang.Integer"/>
+	<field name="origem" class="java.lang.String"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="funcionario_nome" class="java.lang.String"/>
+	<field name="funcionario_rg" class="java.lang.String"/>
+	<field name="funcionario_cpf" class="java.lang.String"/>
+	<field name="endereco" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="61" splitType="Stretch">
+			<subreport>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="61" uuid="5fcde304-9e7b-4f66-ada7-acab02117b36"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="titulo">
+					<subreportParameterExpression><![CDATA[$F{titulo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="ID">
+					<subreportParameterExpression><![CDATA[$F{atendimento_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "cabecalhoFuncionario.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<detail>
+		<band height="35" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="11" width="555" height="24" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="aa6d85fd-c54c-4b43-b323-e67d19b77852"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{texto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="34">
+			<line>
+				<reportElement positionType="Float" x="0" y="17" width="555" height="1" uuid="a6abf7a5-6cef-4750-b240-37ee72631e43"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="555" height="18" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="e8b3be5e-970a-46c7-b20f-41da20b01429"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{endereco}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="218" y="18" width="56" height="16" uuid="b9208a27-a4af-460b-a924-534fc80d55fd"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<text><![CDATA[Impresso em: ]]></text>
+			</staticText>
+			<textField evaluationTime="Auto">
+				<reportElement x="506" y="18" width="49" height="16" uuid="18b0927e-cc33-40d9-8885-16fec0b515d4"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="18" width="77" height="16" uuid="9b51744d-2e06-44a8-9220-de2a69db5469"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH:mm">
+				<reportElement x="274" y="18" width="153" height="16" uuid="0773ad08-fc2c-45d9-9733-eb1162bf4968"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="1" uuid="fb273127-deff-4f96-b69d-75adaac004d5"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="50">
+			<line>
+				<reportElement x="289" y="24" width="261" height="1" uuid="76a3a377-1d94-4f71-812c-fd1506096bd3"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="289" y="25" width="261" height="13" isPrintWhenDetailOverflows="true" uuid="665d1ed9-2b9d-4785-b5fb-659d1588abdb"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

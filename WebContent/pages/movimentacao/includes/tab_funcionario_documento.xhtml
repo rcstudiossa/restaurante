@@ -1,0 +1,86 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="#{funcionarioDocumentoFaces}" />
+	<ui:param name="mbeanModel" value="${funcionarioDocumentoFaces.funcionarioDocumentoModel}" />
+
+	<ui:decorate template="/pages/includes/decorate_atendimento.xhtml">
+
+		<ui:param name="titlePai" value="pgDocumentoPai" />
+		<ui:param name="titleFilho1" value="spDocumentoFilho1" />
+		<ui:param name="titleFilho2" value="spDocumentoFilho2" />
+		<ui:param name="titleBtn" value="pnDocumentoBtn" />
+		
+		<ui:define name="botoesScrollSuperior">
+
+			<style>
+				.btnFileUpload > .ui-widget-header {
+			    	border: 0px !important;
+			    	background: none !important;
+			    	padding: 1px !important;
+			    }
+				.ui-fileupload-content{
+					display:none !important;
+				}
+			</style>
+
+			<h:panelGroup id="pgBtnSuperiorDocumento" rendered="#{tab.flagCriar}" layout="block" styleClass="botoesCriacao" style="width: 100%">
+				
+				<p:fileUpload label="Selecionar Arquivo" invalidFileMessage="Tipo de arquivo inválido"  skinSimple="true" fileUploadListener="#{mbean.handleFileUpload}" auto="true" process="@this, spDocumentoFilho1" update="pgBtnSuperiorDocumento spDocumentoFilho1 spDocumentoFilho2 pnDocumentoBtn" disabled="#{tab.flagBloqueado || !tab.flagInserir || (!empty mbean.documentos and empty mbean.documentos[0].id) || !tab.flagCriar || (sessionScope.atendimentoSessao.statusAtendimentoModel.flagFechado and !tab.flagPermissaoMovimentacaoFechada)}" styleClass="btnFileUpload" />
+
+			</h:panelGroup>
+
+		</ui:define>
+
+		<ui:define name="scroll">
+
+			<p:dataGrid id="dgDocumentos" var="linha" value="#{mbean.documentos}" emptyMessage="Nenhum registro encontrado" columns="1" style="width:100%;">
+
+				<p:panel id="pnDocumento" styleClass="#{linha.id == mbeanModel.id ? 'laranja' : ''} boxPaciente">
+
+					<f:facet name="header">
+						<h:outputText rendered="#{!empty linha.id}" value="#{linha.dataCadastro}">
+							<ui:include src="/pages/includes/include_gmt_format.xhtml" />
+						</h:outputText>
+						<h:outputText value="EM PREENCHIMENTO" rendered="#{empty linha.id}" />
+						<p:commandLink title="Remover solicitação" styleClass="ui-icon cancelar16 linkMovimentacao IconePanel" action="#{mbean.deleteEvent}" process="@this" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spDocumentoFilho2 :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:pgBtnSuperiorDocumento :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:dgDocumentos" rendered="#{empty linha.id and tab.flagCriar}" />
+					</f:facet>
+
+					<p:commandLink process="@this :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spDocumentoFilho2" update=":formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:dgDocumentos :formSubEvolucao:tabTemplateEvolucao#{idTabOutros}:spDocumentoFilho2">
+						<h:panelGrid columns="1">
+							<h:outputText value="Documento: #{linha.id}" />
+							<h:outputText id="otDescricao" value="#{linha.descricaoResumida}" title="#{linha.descricao}" />
+						</h:panelGrid>
+						<f:setPropertyActionListener target="#{funcionarioDocumentoFaces.funcionarioDocumentoModel}" value="#{linha}" />
+					</p:commandLink>
+
+				</p:panel>
+
+			</p:dataGrid>
+
+		</ui:define>
+
+		<ui:define name="detalhe">
+
+			<h:panelGroup id="pgDados" layout="block" rendered="#{!empty mbean.documentos}" style="width: 100%">
+				
+				<div align="center" style="margin-top: 10px">
+					<h:outputText value="Descrição do documento" rendered="#{empty mbeanModel.id}"/><br/>
+					<p:inputText value="#{mbeanModel.descricao}" maxlength="100" styleClass="coluna50" rendered="#{empty mbeanModel.id}"/>
+					<h:outputText value="#{mbeanModel.descricao}" rendered="#{!empty mbeanModel.id}" style="font-weight: bold; color: #5c9ccc; font-size: 18px;" /><br/>
+					<p:media id="mArquivo" value="#{mbeanModel.arquivoView}" height="315" rendered="#{!empty mbeanModel.arquivo}" player="quicktime" />
+				</div>
+
+			</h:panelGroup>
+
+		</ui:define>
+
+		<ui:define name="botoes">
+
+			<p:commandButton id="btnGravarDocumento" value="Gravar" icon="salvar" action="#{mbean.inserirDocumento}" process="@this pgDocumentoPai" update="pgBtnSuperiorDocumento dgDocumentos pnDocumentoBtn pgDados pnDocumentoBtn" disabled="#{tab.flagBloqueado}" rendered="#{!empty mbean.documentos and empty mbeanModel.id}" styleClass="btnPanelMedico" />
+			<p:commandButton id="btnImprimirDocumento" value="Imprimir" icon="imprimir" disabled="#{!tab.flagImprimir || empty mbeanModel.id}" action="#{mbean.imprimir}" oncomplete="imprimirPdf(args.arquivoImpressao)" styleClass="btnPanelMedico" />
+
+		</ui:define>
+
+	</ui:decorate>
+
+</ui:composition>

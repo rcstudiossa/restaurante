@@ -1,0 +1,82 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:form id="frmListaAtendimento">
+
+		<p:poll interval="240" listener="#{listaAtendimentoFaces.pesquisarAtendimentos}" update="@form" widgetVar="poll" autoStart="true" />
+
+		<p:panel toggleable="true" style="margin: 5px">
+
+			<h:panelGrid width="100%" columns="4" columnClasses="coluna40, coluna30, coluna10, coluna20">
+
+				<h:outputLabel value="Responsável" />
+				<h:outputLabel value="Cargo" />
+				<h:outputLabel value="Matrícula" />
+				<h:outputLabel value="" />
+
+				<p:autoComplete value="#{listaAtendimentoFaces.atendimentoFiltroModel.usuarioResponsavelModel}" var="usuario" itemLabel="#{usuario.nome}" itemValue="#{usuario}" completeMethod="#{listaAtendimentoFaces.autoCompleteResponsavel}" converter="#{usuarioConverter}" queryDelay="500" autocomplete="true" minQueryLength="3" forceSelection="true" styleClass="autoComplete98">
+					<p:ajax event="query" global="false" />
+				</p:autoComplete>
+				<p:selectOneMenu value="#{listaAtendimentoFaces.atendimentoFiltroModel.funcionarioModel.cargoModel.id}" styleClass="coluna98">
+					<f:selectItem itemLabel="Selecione" itemValue="" />
+					<f:selectItems value="#{listaAtendimentoFaces.comboCargo}" />
+				</p:selectOneMenu>
+				<p:inputText styleClass="coluna95" onkeypress="return Mascara(this,Integer);" value="#{listaAtendimentoFaces.atendimentoFiltroModel.funcionarioModel.matricula}" />
+				<p:commandButton id="btnAtualizarAtendimentos" action="#{listaAtendimentoFaces.pesquisarAtendimentos}" value="Filtrar" icon="ui-icon-search" style="margin-left: 5px" update="@form" />
+
+			</h:panelGrid>
+
+		</p:panel>
+
+		<h:commandButton action="#{listaAtendimentoFaces.detailEvent}" styleClass="btnAtendimentoAjaxFalse" style="display:none;" />
+
+		<p:scrollPanel id="spPendencias" mode="native" style="margin: 5px; height: calc(100vh - 150px)">
+
+			<p:dataTable id="dtAtendimentos" value="#{listaAtendimentoFaces.grid}" var="linha" rowIndexVar="i" rows="50" paginator="true" filteredValue="#{listaAtendimentoFaces.gridFiltrado}" filterDelay="500" emptyMessage="Nenhum resultado encontrado" selectionMode="single" rowKey="#{linha}" selection="#{listaAtendimentoFaces.atendimentoSelectionModel}" style="width: 100%">
+
+				<p:ajax event="rowDblselect" process="@this" oncomplete="$('.btnAtendimentoAjaxFalse').click()" />
+
+				<p:column styleClass="coluna2 colunaRisco">
+					<h:outputText id="giInfo" styleClass="ui-icon ui-icon-info" title="#{linha.informacoes}" />
+					<p:tooltip for="giInfo" />
+				</p:column>
+
+				<p:column headerText="Matrícula" styleClass="coluna10">
+					<h:outputText value="#{linha.funcionarioModel.matricula}" />
+				</p:column>
+
+				<p:column headerText="Funcionário " styleClass="coluna48" filterBy="#{linha.funcionarioModel.nome}" filterStyle="display: inherit">
+					<h:outputText value="#{linha.funcionarioModel.nome}" />
+				</p:column>
+
+				<p:column headerText="Idade" styleClass="coluna8">
+					<h:outputText value="#{linha.funcionarioModel.descricaoIdade}" />
+				</p:column>
+
+				<p:column headerText="Sexo" styleClass="coluna5">
+					<h:outputText value="#{linha.funcionarioModel.descricaoSexo}" />
+				</p:column>
+
+				<p:column headerText="Cargo" styleClass="coluna30">
+					<h:outputText value="#{linha.funcionarioModel.cargoModel.descricao}" />
+				</p:column>
+
+				<p:column styleClass="coluna3" headerText=">>">
+					<div align="center">
+						<p:commandLink ajax="false" id="clSelecionar" action="#{listaAtendimentoFaces.detailEvent}" disabled="#{!menuFaces.menuModel.flagInserir}" rendered="#{empty listaAtendimentoFaces.gridFiltrado}">
+							<h:graphicImage value="../resources/images/lupa2.png" />
+							<f:setPropertyActionListener target="#{listaAtendimentoFaces.atendimentoModel}" value="#{linha}" />
+						</p:commandLink>
+						<p:commandLink ajax="false" id="clSelecionar2" action="#{listaAtendimentoFaces.detailEvent}" disabled="#{!menuFaces.menuModel.flagInserir}" rendered="#{!empty listaAtendimentoFaces.gridFiltrado}">
+							<h:graphicImage value="../resources/images/lupa2.png" />
+							<f:setPropertyActionListener target="#{listaAtendimentoFaces.atendimentoModel}" value="#{listaAtendimentoFaces.gridFiltrado.get(i)}" />
+						</p:commandLink>
+					</div>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:scrollPanel>
+
+	</h:form>
+
+</ui:composition>

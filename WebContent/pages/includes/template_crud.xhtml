@@ -1,0 +1,151 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+	
+	<script type="text/javascript">
+		function redimensionarOutros() {
+			
+		}
+	</script>
+	
+	<p:tabView id="tabview" style="width:100%; min-height: calc(100vh - 70px)">
+
+		<p:tab id="tabCadastro" title="Cadastro">
+
+			<h:form>
+				<p:confirmDialog id="dlgCancelar" message="Limpar campos para um novo registro?" header="Aviso" severity="alert" widgetVar="cdCancelarCRUD" modal="true">
+					<p:commandButton ajax="false" value="Sim" onclick="PF('cdCancelarCRUD').hide()" action="#{mbean.limpar}" />
+					<p:commandButton type="button" value="Não" onclick="PF('cdCancelarCRUD').hide()" />
+				</p:confirmDialog>
+			</h:form>
+
+			<h:form id="frmTabCadastro" enctype="#{empty uploadArquivo ? 'application/x-www-form-urlencoded' : 'multipart/form-data'}">
+
+				<h:panelGrid id="pgTabCadastro" style="width: 100%" columns="1">
+
+					<ui:insert name="atalhos" />
+
+					<p:commandButton type="button" id="btnClonar" value="Clonar" icon="fa fa-files-o" onclick="PF('cdClonarCRUD').show()" style="position: absolute; right: 155px; top: 6px" rendered="#{mbean.alterar and menuFaces.menuModel.flagAlterar and (empty permissaoAlterar ? true : permissaoAlterar)}" />
+					<p:commandButton type="button" id="btnCancelarCRUD" value="Novo Cadastro" icon="ui-icon-document" onclick="PF('cdCancelarCRUD').show()" style="position: absolute; width: 130px; right: 18px; top: 6px" />
+
+					<p:fieldset legend="Informações de Cadastro" toggleable="true" collapsed="true" style="width: 100%">
+
+						<h:panelGrid width="100%" columns="5" columnClasses="coluna10, coluna20, coluna25, coluna20, coluna25">
+							<h:outputLabel value="Chave" />
+							<h:outputLabel value="Data Cadastro" />
+							<h:outputLabel value="Usuário Cadastro" />
+							<h:outputLabel value="Data Atualização" />
+							<h:outputLabel value="Usuário Atualização" />
+							<h:inputText disabled="true" style="width: 95%;" value="#{mbeanModel.id}" />
+							<h:inputText disabled="true" style="width: 95%;" value="#{mbeanModel.dataCadastro}" rendered="#{empty possuiDadosCadastro ? 'true' : possuiDadosCadastro}">
+								<ui:include src="/pages/includes/include_gmt_format.xhtml" />
+							</h:inputText>
+							<h:inputText disabled="true" style="width: 95%;" value="#{mbeanModel.usuarioCadastroModel.nome}" rendered="#{empty possuiDadosCadastro ? 'true' : possuiDadosCadastro}" />
+							<h:inputText disabled="true" style="width: 95%;" value="#{mbeanModel.dataAtualizacao}" rendered="#{empty possuiDadosAtualizacao ? 'false' : 'true'}">
+								<ui:include src="/pages/includes/include_gmt_format.xhtml" />
+							</h:inputText>
+							<h:inputText disabled="true" style="width: 95%;" value="#{mbeanModel.usuarioAtualizacaoModel.nome}" rendered="#{empty possuiDadosAtualizacao ? 'false' : 'true'}" />
+							<h:inputText disabled="true" style="width: 95%;" rendered="#{empty possuiDadosAtualizacao ? 'true' : 'false'}" />
+							<h:inputText disabled="true" style="width: 95%;" rendered="#{empty possuiDadosAtualizacao ? 'true' : 'false'}" />
+						</h:panelGrid>
+
+						<ui:insert name="informacoes" />
+
+					</p:fieldset>
+
+					<ui:insert name="cadastro" />
+
+					<p:fieldset rendered="#{empty permissao ? true : permissao}" style="width: 100%">
+
+						<p:commandButton type="button" id="btnInserir" value="Gravar" onclick="PF('cdCadastrarCRUD').show()" icon="salvar" style="margin-left: 5px;" rendered="#{!mbean.alterar and menuFaces.menuModel.flagInserir and (empty permissaoInserir ? true : permissaoInserir)}" />
+						<p:commandButton type="button" id="btnAlterar" value="Gravar" icon="salvar" onclick="PF('cdAlterarCRUD').show()" style="margin-left: 5px;" rendered="#{mbean.alterar and menuFaces.menuModel.flagAlterar and (empty permissaoAlterar ? true : permissaoAlterar)}" />
+
+						<ui:insert name="comandosCrudFim" />
+
+					</p:fieldset>
+
+				</h:panelGrid>
+
+				<ui:insert name="cadastroFim" />
+
+				<p:confirmDialog message="Confirmar a INCLUSÃO do registro?" header="Aviso" severity="alert" widgetVar="cdCadastrarCRUD" rendered="#{menuFaces.menuModel.flagInserir and (empty permissao ? true : permissao) and (empty permissaoInserir ? true : permissaoInserir)}">
+					<p:commandButton ajax="#{empty ajaxFalse ? 'true': !ajaxFalse}" process="@form" value="Sim" onclick="PF('cdCadastrarCRUD').hide()" action="#{mbean.insertEvent}" update="#{autoUpdateCadastro?'@this':'@form'} :tabview :tabview:tabCadastro" />
+					<p:commandButton type="button" value="Não" onclick="PF('cdCadastrarCRUD').hide()" />
+				</p:confirmDialog>
+
+				<p:confirmDialog message="Confirmar a ALTERAÇÃO do registro?" header="Aviso" severity="alert" widgetVar="cdAlterarCRUD" rendered="#{menuFaces.menuModel.flagAlterar and (empty permissao ? true : permissao) and (empty permissaoAlterar ? true : permissaoAlterar)}">
+					<p:commandButton process="@form" value="Sim" onclick="PF('cdAlterarCRUD').hide()" action="#{mbean.updateEvent}" update="#{autoUpdateCadastro?'@this':'@form'} @all :tabview :tabview:tabCadastro" />
+					<p:commandButton type="button" value="Não" onclick="PF('cdAlterarCRUD').hide()" />
+				</p:confirmDialog>
+
+				<p:confirmDialog message="Confirmar a CLONAGEM do registro?" header="Aviso" severity="alert" widgetVar="cdClonarCRUD" rendered="#{menuFaces.menuModel.flagAlterar and (empty permissao ? true : permissao) and (empty permissaoAlterar ? true : permissaoAlterar)}">
+					<p:commandButton process="@form" value="Sim" onclick="PF('cdClonarCRUD').hide()" action="#{mbean.clonar}" update="#{autoUpdateCadastro?'@this':'@form'} @all :tabview :tabview:tabCadastro" />
+					<p:commandButton type="button" value="Não" onclick="PF('cdClonarCRUD').hide()" />
+				</p:confirmDialog>
+
+			</h:form>
+
+			<ui:insert name="cadastroSemForm" />
+
+		</p:tab>
+
+		<ui:insert name="tabs" />
+
+		<p:tab id="tabPesquisa" title="Pesquisa">
+
+			<h:form id="frmTabPesquisa" prependId="false">
+
+				<p:fieldset id="fsPesquisaCampos">
+
+					<h:panelGrid columns="1" style="width: 100%">
+
+						<ui:insert name="pesquisaCampos" />
+
+						<h:panelGrid columns="2" columnClasses="coluna15, coluna85">
+							<p:commandButton id="btnPesquisar" value="Pesquisar" icon="ui-icon-search" update="@form" action="#{mbean.findEvent}" style="width: 110px;" />
+							<p:commandButton id="btnLimpar" value="Nova Pesquisa" icon="ui-icon-document" action="#{mbean.limparPesquisa}" style="width: 140px;" process="fsPesquisaCampos" update="gridPesquisa fsPesquisaCampos" />
+						</h:panelGrid>
+
+					</h:panelGrid>
+
+				</p:fieldset>
+				
+				<p:fieldset id="fsGridPesquisa" style="margin-top: 5px">
+					
+					<h:commandButton action="#{mbean.detailSelectionEvent}" styleClass="btnPesquisarAjaxFalse" style="display:none;"/>
+					
+					<p:dataTable emptyMessage="Nenhum registro encontrado" paginator="true" paginatorAlwaysVisible="false" rows="30" id="gridPesquisa" value="#{mbean.grid}" var="linha" selectionMode="single" rowKey="#{linha.id}" selection="#{mbean.crudSelectionModel}">
+						
+						<p:ajax event="rowSelect" process="@this" oncomplete="$('.btnPesquisarAjaxFalse').click()" />
+						
+						<ui:insert name="colunasTabela" />
+
+						<p:column headerText="Clonar" styleClass="coluna05" rendered="#{menuFaces.menuModel.flagExcluir}">
+							<p:commandLink ajax="false" action="#{mbean.obterClonar}" styleClass="fa fa-files-o Fs14">
+								<f:setPropertyActionListener target="#{mbeanModel.id}" value="#{linha.id}" />
+							</p:commandLink>
+						</p:column>
+
+						<p:column headerText="Excluir" styleClass="coluna05" rendered="#{menuFaces.menuModel.flagExcluir}">
+							<p:commandLink id="clExcluir" onclick="PF('cdExcluirCRUD').show()" disabled="#{empty permissaoExcluir ? 'false' : !permissaoExcluir}">
+								<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								<f:setPropertyActionListener target="#{mbeanModel.id}" value="#{linha.id}" />
+							</p:commandLink>
+						</p:column>
+
+						<ui:insert name="colunasFim" />
+
+					</p:dataTable>
+
+					<p:confirmDialog message="Confirma exclusão do registro?" header="Aviso" severity="alert" widgetVar="cdExcluirCRUD" rendered="#{menuFaces.menuModel.flagExcluir}">
+						<p:commandButton value="Sim" onclick="PF('cdExcluirCRUD').hide()" action="#{mbean.deleteEvent}" process="@this" update="gridPesquisa :tabview:frmTabCadastro" />
+						<p:commandButton type="button" value="Não" onclick="PF('cdExcluirCRUD').hide()" />
+					</p:confirmDialog>
+
+				</p:fieldset>
+
+			</h:form>
+
+		</p:tab>
+
+	</p:tabView>
+
+</ui:composition>

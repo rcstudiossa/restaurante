@@ -1,0 +1,16 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<p:dialog id="dialogFotoCam" dynamic="true" header="Câmera" widgetVar="dlgCam" height="275" width="360">
+
+		<h:panelGroup id="pgFotoCam">
+			<h:panelGroup>
+				<div align="center">
+					<p:photoCam widgetVar="pc" listener="#{mbean.oncapture}" process="@this" update="fotoCam pgFotoCam" />
+					<p:commandButton icon="fa fa-file-photo-o" value="Capturar" onclick="PF('pc').capture(); PF('dlgCam').hide();" process="@this" style="margin-top: 5px" />
+				</div>
+			</h:panelGroup>
+		</h:panelGroup>
+
+	</p:dialog>
+
+</ui:composition>

@@ -1,0 +1,69 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<ui:param name="mbean" value="${configuracaoFaces}" />
+
+	<script type="text/javascript">
+		function redimensionarOutros() {
+		}
+	</script>
+
+	<h:form id="formCadastro" prependId="false">
+
+		<p:tabView id="tabview" style="border: 0px">
+
+			<p:tab title="Principal">
+
+				<p:dataTable id="dtConfiguracoes" var="linha" value="#{mbean.configuracoes}" rows="50" paginator="true" paginatorPosition="bottom" emptyMessage="Nenhuma configuração encontrada" styleClass="dataTable" style="margin-top: 10px">
+
+					<p:column styleClass="coluna010" headerText="Identificador">
+						<h:outputText value="#{linha.tipoConfiguracaoModel.id}" />
+					</p:column>
+
+					<p:column styleClass="colun45" headerText="Descrição">
+						<h:outputText value="#{linha.tipoConfiguracaoModel.descricao}" />
+					</p:column>
+
+					<p:column styleClass="coluna10" headerText="Valor">
+						<p:inplace rendered="#{linha.tipoConfiguracaoModel.tipoRespostaModel.numerico}">
+							<p:inputNumber value="#{linha.respostaEscolhidaLong}" decimalPlaces="0" required="true" maxlength="6" styleClass="autoComplete90" />
+						</p:inplace>
+						<p:inplace rendered="#{linha.tipoConfiguracaoModel.tipoRespostaModel.pontoFlutuante}">
+							<p:inputText value="#{linha.respostaEscolhidaDouble}" required="true" maxlength="6" onkeyup="return mascaraMoeda(this)" styleClass="coluna95" />
+						</p:inplace>
+						<p:inplace rendered="#{linha.tipoConfiguracaoModel.tipoRespostaModel.texto}">
+							<p:inputTextarea value="#{linha.respostaEscolhida}" required="true" maxlength="2000" autoResize="false" rows="5" styleClass="coluna95" />
+						</p:inplace>
+						<p:inplace rendered="#{linha.tipoConfiguracaoModel.tipoRespostaModel.inputTexto}">
+							<p:inputText value="#{linha.respostaEscolhida}" required="true" maxlength="200" styleClass="coluna95" />
+						</p:inplace>
+						<p:inplace rendered="#{linha.tipoConfiguracaoModel.tipoRespostaModel.booleano}">
+							<p:selectBooleanCheckbox value="#{linha.respostaEscolhidaBoolean}" />
+						</p:inplace>
+					</p:column>
+					
+					<p:column styleClass="coluna15" headerText="Data">
+						<h:outputText value="#{linha.dataCadastro}">
+							<ui:include src="/pages/includes/include_gmt_format.xhtml" />
+						</h:outputText>
+					</p:column>
+					
+					<p:column styleClass="coluna20" headerText="Usuário">
+						<h:outputText value="#{linha.usuarioCadastroModel.nome}" />
+					</p:column>
+
+				</p:dataTable>
+
+				<p:commandButton type="button" icon="salvar" value="Alterar Configurações" onclick="PF('cdAlterarCRUD').show()" style="margin-top: 5px" />
+
+				<p:confirmDialog message="Confirmar a ALTERAÇÃO do registro?" header="Aviso" severity="alert" widgetVar="cdAlterarCRUD">
+					<p:commandButton value="Sim" onclick="PF('cdAlterarCRUD').hide()" action="#{mbean.updateEvent}" update="@form" />
+					<p:commandButton type="button" value="Não" onclick="PF('cdAlterarCRUD').hide()" />
+				</p:confirmDialog>
+
+			</p:tab>
+
+		</p:tabView>
+
+	</h:form>
+
+</ui:composition>

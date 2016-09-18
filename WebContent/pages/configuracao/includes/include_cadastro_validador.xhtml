@@ -1,0 +1,38 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid width="100%" columns="1" columnClasses="coluna50">
+
+		<h:outputLabel for="itDescricao" value="Descrição" />
+		<p:inputText id="itDescricao" value="#{mbeanModel.descricao}" style="width: 50%" required="true" label="Descrição" />
+
+		<h:outputLabel value="Tipo de Aviso" for="omTipoAviso" />
+		<p:selectOneMenu id="omTipoAviso" value="#{mbeanModel.tipoAviso}" required="true" label="Tipo de Aviso">
+			<f:selectItem itemLabel="Info" itemValue="Info" />
+			<f:selectItem itemLabel="Alerta" itemValue="Alerta" />
+			<f:selectItem itemLabel="Erro" itemValue="Erro" />
+		</p:selectOneMenu>
+
+		<h:outputLabel for="itExpressao" value="Expressão" />
+		<p:inputText id="itExpressao" value="#{mbeanModel.expressao}" style="width: 50%" label="Expressão" />
+
+		<h:outputLabel for="itAviso" value="Aviso" />
+		<p:inputText id="itAviso" value="#{mbeanModel.aviso}" style="width: 50%" label="Aviso" />
+
+		<h:outputLabel for="itaQuery" value="Query de Execução" />
+		<p:inputTextarea id="itaQuery" value="#{mbeanModel.query}" rows="7" autoResize="false" styleClass="coluna90" />
+
+		<h:outputLabel for="itaQueryValidacao" value="Validação via Query" />
+		<p:inputTextarea id="itaQueryValidacao" value="#{mbeanModel.queryValidacao}" rows="7" autoResize="false" styleClass="coluna90" />
+		<h:outputText value="Aviso de retorno: INFO, AVISO, ERRO !#.#! Ex: 'INFO!#.#!Operação realizada com sucesso!'" />
+
+		<br />
+		<h:outputLabel for="cbFlagAtivo" value="Ativo?" />
+		<p:selectBooleanCheckbox id="cbFlagAtivo" value="#{mbeanModel.flagAtivo}" />
+
+		<br />
+		<h:outputLabel for="cbFlagValidacaoFinal" value="Validação apenas no Final?" />
+		<p:selectBooleanCheckbox id="cbFlagValidacaoFinal" value="#{mbeanModel.flagValidacaoFinal}" />
+
+	</h:panelGrid>
+
+</ui:composition>

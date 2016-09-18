@@ -1,0 +1,87 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<script type="text/javascript">
+		
+		function selecionarLinha(campo) {
+			$(".nomeExame > span").css("color", "#546e7a");
+			$(".nomeExame > span").css("font-size", "14px");
+			$(campo).parents().filter(".linhaResultado").find("td").filter(".nomeExame").find("span").css("color", "red");
+			$(campo).parents().filter(".linhaResultado").find("td").filter(".nomeExame").find("span").css("font-size", "16px");
+		}
+		
+		function pularCampos(event, campos, idCampo) {
+			
+			var code = event.keyCode ? event.keyCode : event.which;
+			
+			for (j = 0; campos.length > j; j++) {
+
+				if (campos[j].id == idCampo) {
+
+					if (code == 40 || code == 13) {
+
+						if (campos.length > j + 1) {
+
+							campos[j + 1].focus();
+							return false;
+
+						} else {
+							
+							return true;
+
+						}
+
+					} else if (code == 38) {
+
+						if (j != 0) {
+
+							campos[j - 1].focus();
+							return false;
+
+						} else {
+							
+							return true;
+							
+						}
+
+					}
+
+				}
+
+			}
+			
+			return true;
+			
+		}
+		
+		function movimentarFocus(event, campo, idsCampos) {
+			
+			var code = event.keyCode ? event.keyCode : event.which;
+			
+			if (code == 13 || code == 38 || code == 40) {
+
+				event.preventDefault();
+				
+				for (i = 0; idsCampos.length > i; i++) {
+					
+					var indexSeparador = campo.id.lastIndexOf(":");
+					var inicioId = campo.id.substring(0, indexSeparador) + ":";
+					inicioId = inicioId.replace(/\:/g, "\\:");
+					
+					var idCompleto = $("input:enabled[id*=" + inicioId + idsCampos[i] + "][id$=_input],select:enabled[id*=" + inicioId + idsCampos[i] + "]").attr('id');
+					
+					var campos = $("input:enabled[id*=" + idsCampos[i] + "][id$=_input],select:enabled[id*=" + idsCampos[i] + "]");
+
+					if(!pularCampos(event, campos, idCompleto)){
+						return false;
+					}
+					
+				}
+				
+			}
+
+			return true;
+		}
+
+	</script>
+
+</ui:composition>

@@ -1,0 +1,13 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:ts="http://java.sun.com/jsf/composite/components">
+
+	<h:panelGrid width="25%">
+
+		<p:outputLabel for="funcao" value="Função" />
+		<p:selectOneMenu id="funcao" value="#{mbeanModel.funcaoModel.id}" required="true" styleClass="coluna90">
+			<f:selectItem itemLabel="Selecione" itemValue="" />
+			<f:selectItems value="#{mbean.comboFuncoes}" />
+		</p:selectOneMenu>
+
+	</h:panelGrid>
+
+</ui:composition>

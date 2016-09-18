@@ -1,0 +1,91 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:param name="mbean" value="${medidaFaces}" />
+	<ui:param name="mbeanModel" value="${medidaFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${medidaFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="true" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_medida.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+			<h:panelGrid columns="2" columnClasses="coluna80, coluna20" style="width: 50%">
+
+				<h:outputText value="Unidade" />
+				<h:outputText value="" />
+
+				<p:selectOneMenu value="#{mbean.unidadeMedidaModel.id}" styleClass="coluna98">
+					<f:selectItem itemValue="" itemLabel="Não selecionado" />
+					<f:selectItems value="#{mbean.comboUnidades}" />
+				</p:selectOneMenu>
+				<p:commandButton icon="ui-icon-plus" value="Adicionar" action="#{mbean.adicionarUnidade}" process="@form" update="pgGridUnidades" />
+
+			</h:panelGrid>
+
+			<h:panelGroup id="pgGridUnidades">
+
+				<p:dataTable value="#{mbeanModel.unidadesMedidas}" var="linha" emptyMessage="Nenhum registro encontrado" rendered="#{!empty mbeanModel.unidadesMedidas}" style="width: 50%">
+
+					<p:column headerText="Unidade" styleClass="coluna40">
+						<h:outputText value="#{linha.unidadeMedidaModel.descricao}" />
+					</p:column>
+
+					<p:column headerText="Fórmula Volta" styleClass="coluna20">
+						<p:inputText value="#{linha.formulaVolta}" maxlength="100" styleClass="coluna90" />
+					</p:column>
+
+					<p:column headerText="Fórmula Ida" styleClass="coluna20">
+						<p:inputText value="#{linha.formulaIda}" maxlength="100" styleClass="coluna90" />
+					</p:column>
+
+					<p:column headerText="Padrão" styleClass="coluna015">
+						<p:selectBooleanCheckbox value="#{linha.flagPadrao}" />
+					</p:column>
+
+					<p:column styleClass="coluna010">
+						<div align="center">
+							<p:commandLink title="Clique aqui para remover o item" action="#{mbean.removerUnidade}" process="@form" update="@form">
+								<h:graphicImage value="../resources/images/delete16.png" style="border: 0px" />
+								<f:setPropertyActionListener target="#{medidaFaces.medidaUnidadeMedidaModel}" value="#{linha}" />
+							</p:commandLink>
+						</div>
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGroup>
+
+		</p:fieldset>
+
+	</ui:define>
+	
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_medida.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" styleClass="coluna50">
+
+			<h:outputLabel for="itDescricaoPesquisa" value="Descrição" />
+			<p:inputText id="itDescricaoPesquisa" value="#{mbeanPesquisaModel.descricao}" style="width: 100%" />
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Descrição" styleClass="coluna90">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>

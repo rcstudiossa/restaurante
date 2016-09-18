@@ -1,0 +1,55 @@
+<ui:composition template="/pages/includes/template_crud.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<ui:param name="mbean" value="${tabFaces}" />
+	<ui:param name="mbeanModel" value="${tabFaces.crudModel}" />
+	<ui:param name="mbeanPesquisaModel" value="${tabFaces.crudPesquisaModel}" />
+	<ui:param name="possuiDadosAtualizacao" value="true" />
+
+	<ui:define name="cadastro">
+
+		<p:fieldset style="width: 100%">
+
+			<ui:include src="includes/include_cadastro_tab.xhtml">
+				<ui:param name="disabled" value="${false}" />
+			</ui:include>
+
+		</p:fieldset>
+
+	</ui:define>
+	
+	<ui:define name="comandosCrudFim">
+
+		<ui:include src="includes/include_historico_tab.xhtml" />
+
+	</ui:define>
+
+	<ui:define name="pesquisaCampos">
+
+		<h:panelGrid columns="1" styleClass="coluna50">
+
+			<h:outputLabel for="itDescricaoPesquisa" value="Descrição" />
+			<p:inputText id="itDescricaoPesquisa" value="#{mbeanPesquisaModel.descricao}" style="width: 100%" />
+
+			<h:outputText value="Tab pai" />
+			<p:selectOneMenu value="#{mbeanPesquisaModel.tabModel.id}">
+				<f:selectItem itemValue="" itemLabel="Não Selecionado" />
+				<f:selectItems value="#{mbean.comboTabs}" />
+			</p:selectOneMenu>
+
+		</h:panelGrid>
+
+	</ui:define>
+
+	<ui:define name="colunasTabela">
+
+		<p:column headerText="Descrição" styleClass="coluna50">
+			<h:outputText value="#{linha.descricao}" />
+		</p:column>
+
+		<p:column headerText="Título" styleClass="coluna30">
+			<h:outputText value="#{linha.titulo}" />
+		</p:column>
+
+	</ui:define>
+
+</ui:composition>
