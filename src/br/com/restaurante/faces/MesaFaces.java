@@ -25,6 +25,8 @@ public class MesaFaces extends CrudFaces<MesaModel> {
 		this.crudModel = new MesaModel();
 		this.crudModel.setFlagAtivo(Boolean.TRUE);
 
+		
+		
 	}
 	
 	@Override
